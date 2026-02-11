@@ -3,156 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Progres Santri</title>
+    <title>Sistem Manajemen Santri - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .sidebar-item.active { background: #1e40af; border-left: 4px solid #facc15; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 flex h-screen overflow-hidden">
 
-    <nav class="bg-blue-600 p-4 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="font-bold text-lg"><i class="fas fa-mosque mr-2"></i> Monitoring Santri</h1>
-            <button onclick="toggleModal()" class="bg-white text-blue-600 px-4 py-2 rounded-lg text-sm font-semibold shadow-md">
-                <i class="fas fa-plus mr-1"></i> Tambah Progres
+    <aside class="w-64 bg-blue-700 text-white flex-shrink-0 hidden md:flex flex-col">
+        <div class="p-6 text-center border-b border-blue-600">
+            <h1 class="text-xl font-black tracking-widest uppercase">SMS Admin</h1>
+            <p class="text-xs text-blue-200">v1.0 - Digital Board</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+            <button onclick="switchTab('dashboard')" class="sidebar-item active w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
+                <i class="fas fa-chart-line mr-3"></i> Dashboard
             </button>
-        </div>
-    </nav>
+            <button onclick="switchTab('santri')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
+                <i class="fas fa-users mr-3"></i> Data Santri
+            </button>
+            <button onclick="switchTab('absensi')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
+                <i class="fas fa-calendar-check mr-3"></i> Absensi (8 Kelas)
+            </button>
+            <button onclick="switchTab('progres')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
+                <i class="fas fa-book-open mr-3"></i> Progres Hafalan
+            </button>
+            <button onclick="switchTab('pelanggaran')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
+                <i class="fas fa-exclamation-triangle mr-3"></i> Pelanggaran
+            </button>
+        </nav>
+    </aside>
 
-    <div class="container mx-auto p-4">
-        <div id="loading" class="text-center py-10">
-            <div class="animate-spin text-blue-600 text-4xl mb-4"><i class="fas fa-circle-notch"></i></div>
-            <p class="text-gray-500">Memuat data santri...</p>
-        </div>
-
-        <div id="dataContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
+            <button class="md:hidden text-blue-700 text-xl"><i class="fas fa-bars"></i></button>
+            <h2 id="tabTitle" class="font-bold text-gray-700 uppercase tracking-wider text-sm">Dashboard Overview</h2>
+            <div class="flex items-center space-x-4 text-sm">
+                <span class="text-gray-500 italic" id="currentDate"></span>
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">A</div>
             </div>
-    </div>
+        </header>
 
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl w-full max-w-md overflow-hidden shadow-2xl">
-            <div class="bg-blue-600 p-4 text-white flex justify-between">
-                <h2 class="font-bold">Input Progres Hafalan</h2>
-                <button onclick="toggleModal()" class="text-white">&times;</button>
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            
+            <div id="tab-dashboard" class="tab-content active animate-fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-blue-500">
+                        <p class="text-gray-400 text-xs font-bold uppercase">Total Santri</p>
+                        <h3 id="dash-santri" class="text-3xl font-black mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-green-500">
+                        <p class="text-gray-400 text-xs font-bold uppercase">Progres Input</p>
+                        <h3 id="dash-progres" class="text-3xl font-black mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-red-500">
+                        <p class="text-gray-400 text-xs font-bold uppercase">Pelanggaran</p>
+                        <h3 id="dash-pelanggaran" class="text-3xl font-black mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-yellow-500">
+                        <p class="text-gray-400 text-xs font-bold uppercase">Absensi Unik</p>
+                        <h3 id="dash-absensi" class="text-3xl font-black mt-1">0</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl shadow-sm p-6">
+                        <h4 class="font-bold mb-4 flex items-center"><i class="fas fa-history mr-2 text-blue-500"></i> Aktivitas Terbaru</h4>
+                        <div id="recentList" class="space-y-4"></div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm p-6">
+                        <h4 class="font-bold mb-4 flex items-center"><i class="fas fa-user-times mr-2 text-red-500"></i> Tidak Hadir Hari Ini</h4>
+                        <div id="absensiList" class="space-y-3"></div>
+                    </div>
+                </div>
             </div>
-            <form id="progresForm" class="p-4 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Nama Santri</label>
-                    <input type="text" name="nama" required class="w-full border p-2 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+
+            <div id="tab-santri" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 text-gray-400 text-xs uppercase font-bold">
+                            <tr>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Nama Lengkap</th>
+                                <th class="p-4">Kelas</th>
+                                <th class="p-4">Wali</th>
+                            </tr>
+                        </thead>
+                        <tbody id="santriTable" class="text-sm"></tbody>
+                    </table>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                    <select name="kategori" class="w-full border p-2 rounded-md">
-                        <option value="Tahfidz">Tahfidz (Al-Qur'an)</option>
-                        <option value="Diniyah">Diniyah (Kitab)</option>
-                        <option value="Surah Pendek">Surah Pendek</option>
-                    </select>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Dari (Ayat/Hal)</label>
-                        <input type="text" name="dari" class="w-full border p-2 rounded-md">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Sampai (Ayat/Hal)</label>
-                        <input type="text" name="sampai" class="w-full border p-2 rounded-md">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Surah / Kitab</label>
-                    <input type="text" name="surah" placeholder="Misal: Al-Baqarah" class="w-full border p-2 rounded-md">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Keterangan Tambahan</label>
-                    <textarea name="keterangan" class="w-full border p-2 rounded-md" rows="2"></textarea>
-                </div>
-                <button type="submit" id="btnSimpan" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition">
-                    SIMPAN DATA
-                </button>
-            </form>
+            </div>
+
+            <div id="tab-progres" class="tab-content">
+                <div id="progresGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <div id="tab-pelanggaran" class="tab-content">
+                <div id="pelanggaranList" class="space-y-4"></div>
+            </div>
+
         </div>
-    </div>
+    </main>
 
     <script>
-        // GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA (BERAKHIRAN /exec)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec';
 
-        // Fungsi Ambil Data
-        async function loadData() {
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getAll`);
-                const data = await response.json();
-                renderData(data);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('loading').innerHTML = '<p class="text-red-500">Gagal memuat data. Periksa URL SCRIPT_URL.</p>';
-            }
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', { dateStyle: 'full' });
+
+        async function switchTab(tab) {
+            // UI Logic
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('tabTitle').innerText = tab.replace(/([A-Z])/g, ' $1') + ' Section';
+            event.currentTarget.classList.add('active');
+
+            // Load Data based on tab
+            if(tab === 'dashboard') loadDashboard();
+            if(tab === 'santri') loadSantri();
+            if(tab === 'progres') loadProgres();
+            if(tab === 'pelanggaran') loadPelanggaran();
+            if(tab === 'absensi') loadAbsensiFull();
         }
 
-        // Tampilkan Data ke Kartu
-        function renderData(data) {
-            const container = document.getElementById('dataContainer');
-            const loading = document.getElementById('loading');
-            loading.classList.add('hidden');
-            container.innerHTML = '';
+        async function loadDashboard() {
+            const res = await fetch(`${SCRIPT_URL}?action=getDashboard`);
+            const data = await res.json();
+            
+            document.getElementById('dash-santri').innerText = data.totalSantri;
+            document.getElementById('dash-progres').innerText = data.totalProgres;
+            document.getElementById('dash-pelanggaran').innerText = data.totalPelanggaran;
+            document.getElementById('dash-absensi').innerText = data.totalAbsensi;
 
-            data.forEach(item => {
-                const card = `
-                    <div class="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500">
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-gray-800 text-lg">${item.nama}</h3>
-                            <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-semibold">${item.kategori}</span>
+            let recentHtml = '';
+            data.recentActivities.forEach(act => {
+                recentHtml += `
+                    <div class="flex items-start p-3 hover:bg-gray-50 rounded-xl transition">
+                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600 mr-4">
+                            <i class="fas ${act.type === 'progres' ? 'fa-book' : 'fa-user-clock'}"></i>
                         </div>
-                        <p class="text-sm text-gray-600 mt-2 italic"><i class="fas fa-book-open mr-1"></i> ${item.surah || '-'}</p>
-                        <div class="flex mt-3 text-sm text-gray-700 bg-gray-50 p-2 rounded">
-                            <div class="w-1/2"><strong>Dari:</strong> ${item.dari || '-'}</div>
-                            <div class="w-1/2 border-l pl-2"><strong>Sampai:</strong> ${item.sampai || '-'}</div>
+                        <div class="flex-1">
+                            <p class="text-sm font-bold">${act.namaSantri}</p>
+                            <p class="text-xs text-gray-500">${act.status || act.tipeHafalan || act.pelanggaran}</p>
                         </div>
-                        <div class="mt-3 flex justify-between items-center text-xs text-gray-400">
-                            <span><i class="far fa-calendar-alt mr-1"></i> ${item.tanggal}</span>
-                            <span class="text-gray-600 font-medium">${item.keterangan || ''}</span>
+                        <span class="text-[10px] text-gray-300 italic">${new Date(act.tanggal).toLocaleTimeString()}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('recentList').innerHTML = recentHtml;
+
+            let absensiHtml = '';
+            data.absensiHariIni.forEach(abs => {
+                absensiHtml += `
+                    <div class="flex justify-between items-center p-3 bg-red-50 rounded-xl border border-red-100">
+                        <div class="text-sm font-bold text-red-700">${abs.namaSantri} <span class="text-[10px] text-gray-400 block font-normal">${abs.kelas}</span></div>
+                        <div class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full font-black">${abs.status}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('absensiList').innerHTML = absensiHtml || '<p class="text-center text-gray-400 italic">Semua santri hadir/belum diabsen.</p>';
+        }
+
+        async function loadSantri() {
+            const res = await fetch(`${SCRIPT_URL}?action=getSantri`);
+            const data = await res.json();
+            let html = '';
+            data.forEach(s => {
+                html += `<tr class="border-b border-gray-50 hover:bg-gray-50">
+                    <td class="p-4 font-mono text-blue-600">${s.id}</td>
+                    <td class="p-4 font-bold">${s.nama}</td>
+                    <td class="p-4"><span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">${s.kelas}</span></td>
+                    <td class="p-4 text-gray-500">${s.wali}</td>
+                </tr>`;
+            });
+            document.getElementById('santriTable').innerHTML = html;
+        }
+
+        async function loadProgres() {
+            const res = await fetch(`${SCRIPT_URL}?action=getProgres`);
+            const data = await res.json();
+            let html = '';
+            data.forEach(p => {
+                html += `
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 bg-blue-600 text-white text-[10px] rounded-bl-xl font-bold uppercase">${p.tipeHafalan}</div>
+                        <h4 class="font-black text-gray-800">${p.namaSantri}</h4>
+                        <div class="mt-4 space-y-1 text-sm text-gray-600">
+                            <p><i class="fas fa-quran mr-2 text-blue-300"></i> ${p.surah || '-'}</p>
+                            <p><i class="fas fa-list-ol mr-2 text-blue-300"></i> Ayat ${p.dariAyat} - ${p.sampaiAyat}</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t text-[10px] text-gray-400 flex justify-between italic">
+                            <span>${new Date(p.tanggal).toLocaleDateString()}</span>
+                            <span>By: ${p.editor}</span>
                         </div>
                     </div>
                 `;
-                container.innerHTML += card;
             });
+            document.getElementById('progresGrid').innerHTML = html;
         }
 
-        // Toggle Modal
-        function toggleModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.toggle('hidden');
+        async function loadPelanggaran() {
+            const res = await fetch(`${SCRIPT_URL}?action=getPelanggaran`);
+            const data = await res.json();
+            let html = '';
+            data.forEach(p => {
+                html += `
+                    <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-gray-800">${p.namaSantri}</p>
+                            <p class="text-sm text-red-600 font-medium">${p.pelanggaran}</p>
+                            <p class="text-xs text-gray-400 mt-1">${p.keterangan}</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-gray-300 italic block">${new Date(p.tanggal).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('pelanggaranList').innerHTML = html;
         }
 
-        // Submit Form
-        document.getElementById('progresForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSimpan');
-            btn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Mengirim...';
-            btn.disabled = true;
-
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            data.action = 'add';
-
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
-                alert('Data berhasil disimpan!');
-                e.target.reset();
-                toggleModal();
-                loadData(); // Refresh data
-            } catch (error) {
-                alert('Terjadi kesalahan saat menyimpan data.');
-            } finally {
-                btn.innerHTML = 'SIMPAN DATA';
-                btn.disabled = false;
-            }
-        });
-
-        // Jalankan saat pertama kali dibuka
-        loadData();
+        // Jalankan awal
+        loadDashboard();
     </script>
 </body>
 </html>
