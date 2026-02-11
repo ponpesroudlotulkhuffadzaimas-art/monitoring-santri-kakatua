@@ -1,17 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manajemen Santri</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body, html { 
+            margin: 0; padding: 0; height: 100%; width: 100%; 
+            overflow: hidden; background-color: #f3f4f6; 
+        }
+        iframe { 
+            border: none; width: 100%; height: 100%; 
+            display: block; 
+        }
+    </style>
+</head>
 <body>
     
     <iframe src="https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec"></iframe>
 
     <script>
-        // DISINI TEMPAT MENDAFTARKANNYA
+        // Mendaftarkan Service Worker agar bisa di-install di HP
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js') // Nama harus sama dengan file di atas
+            navigator.serviceWorker.register('sw.js')
             .then(() => console.log("Aplikasi Siap di HP!"))
-            .catch((err) => console.log("Gagal daftar sw:", err));
+            .catch((err) => console.error("Gagal daftar sw:", err));
         }
     </script>
 </body>
