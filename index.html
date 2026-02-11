@@ -1,234 +1,255 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Santri - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .sidebar-item.active { background: #1e40af; border-left: 4px solid #facc15; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sistem Manajemen Santri - Digital Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* CSS ANDA TETAP SAMA (PERSIS SEPERTI DI APPS SCRIPT) */
+    /* ... (Gunakan semua CSS dari <style> yang Anda tempelkan di atas) ... */
+    /* Saya tambahkan sedikit untuk animasi tab */
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    
+    /* Tambahan agar scroll halus di HP */
+    body { -webkit-overflow-scrolling: touch; }
+    .nav-tabs { sticky: top; z-index: 10; }
+  </style>
 </head>
-<body class="bg-gray-100 flex h-screen overflow-hidden">
+<body>
 
-    <aside class="w-64 bg-blue-700 text-white flex-shrink-0 hidden md:flex flex-col">
-        <div class="p-6 text-center border-b border-blue-600">
-            <h1 class="text-xl font-black tracking-widest uppercase">SMS Admin</h1>
-            <p class="text-xs text-blue-200">v1.0 - Digital Board</p>
+  <div class="login-page" id="loginPage">
+    <div class="login-card">
+      <div class="login-logo"><i class="fas fa-mosque"></i></div>
+      <h1 class="login-title">Sistem Manajemen Santri</h1>
+      <p class="login-subtitle">Masuk untuk melanjutkan</p>
+      <div id="loginAlert" class="alert"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" id="loginUsername" placeholder="admin" required>
         </div>
-        <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-            <button onclick="switchTab('dashboard')" class="sidebar-item active w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
-                <i class="fas fa-chart-line mr-3"></i> Dashboard
-            </button>
-            <button onclick="switchTab('santri')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
-                <i class="fas fa-users mr-3"></i> Data Santri
-            </button>
-            <button onclick="switchTab('absensi')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
-                <i class="fas fa-calendar-check mr-3"></i> Absensi (8 Kelas)
-            </button>
-            <button onclick="switchTab('progres')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
-                <i class="fas fa-book-open mr-3"></i> Progres Hafalan
-            </button>
-            <button onclick="switchTab('pelanggaran')" class="sidebar-item w-full flex items-center p-3 rounded-lg transition hover:bg-blue-600">
-                <i class="fas fa-exclamation-triangle mr-3"></i> Pelanggaran
-            </button>
-        </nav>
-    </aside>
-
-    <main class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm">
-            <button class="md:hidden text-blue-700 text-xl"><i class="fas fa-bars"></i></button>
-            <h2 id="tabTitle" class="font-bold text-gray-700 uppercase tracking-wider text-sm">Dashboard Overview</h2>
-            <div class="flex items-center space-x-4 text-sm">
-                <span class="text-gray-500 italic" id="currentDate"></span>
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold">A</div>
-            </div>
-        </header>
-
-        <div class="flex-1 overflow-y-auto p-4 md:p-8">
-            
-            <div id="tab-dashboard" class="tab-content active animate-fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-blue-500">
-                        <p class="text-gray-400 text-xs font-bold uppercase">Total Santri</p>
-                        <h3 id="dash-santri" class="text-3xl font-black mt-1">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-green-500">
-                        <p class="text-gray-400 text-xs font-bold uppercase">Progres Input</p>
-                        <h3 id="dash-progres" class="text-3xl font-black mt-1">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-red-500">
-                        <p class="text-gray-400 text-xs font-bold uppercase">Pelanggaran</p>
-                        <h3 id="dash-pelanggaran" class="text-3xl font-black mt-1">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-8 border-yellow-500">
-                        <p class="text-gray-400 text-xs font-bold uppercase">Absensi Unik</p>
-                        <h3 id="dash-absensi" class="text-3xl font-black mt-1">0</h3>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div class="bg-white rounded-2xl shadow-sm p-6">
-                        <h4 class="font-bold mb-4 flex items-center"><i class="fas fa-history mr-2 text-blue-500"></i> Aktivitas Terbaru</h4>
-                        <div id="recentList" class="space-y-4"></div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-sm p-6">
-                        <h4 class="font-bold mb-4 flex items-center"><i class="fas fa-user-times mr-2 text-red-500"></i> Tidak Hadir Hari Ini</h4>
-                        <div id="absensiList" class="space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-santri" class="tab-content">
-                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 text-gray-400 text-xs uppercase font-bold">
-                            <tr>
-                                <th class="p-4">ID</th>
-                                <th class="p-4">Nama Lengkap</th>
-                                <th class="p-4">Kelas</th>
-                                <th class="p-4">Wali</th>
-                            </tr>
-                        </thead>
-                        <tbody id="santriTable" class="text-sm"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="tab-progres" class="tab-content">
-                <div id="progresGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            </div>
-
-            <div id="tab-pelanggaran" class="tab-content">
-                <div id="pelanggaranList" class="space-y-4"></div>
-            </div>
-
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
         </div>
-    </main>
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> Masuk
+        </button>
+      </form>
+    </div>
+  </div>
 
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec';
+  <div class="main-app" id="mainApp" style="display: none;">
+    <div class="app-container">
+      <header class="app-header">
+        <div class="app-header-left">
+          <div class="app-title"><i class="fas fa-mosque" style="color: var(--primary);"></i> Sistem Santri</div>
+          <div class="app-subtitle">Manajemen Hafalan & Pelanggaran</div>
+        </div>
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">A</div>
+          <div>
+            <div style="font-weight: 600;" id="userName">Administrator</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">Online</div>
+          </div>
+          <button class="action-btn delete" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </header>
 
-        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', { dateStyle: 'full' });
+      <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showPage('dashboard')"><i class="fas fa-home"></i> Dashboard</button>
+        <button class="nav-tab" onclick="showPage('absensi')"><i class="fas fa-clipboard-check"></i> Absensi</button>
+        <button class="nav-tab" onclick="showPage('progres')"><i class="fas fa-book-quran"></i> Progres</button>
+        <button class="nav-tab" onclick="showPage('pelanggaran')"><i class="fas fa-exclamation-circle"></i> Disiplin</button>
+      </nav>
 
-        async function switchTab(tab) {
-            // UI Logic
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('tabTitle').innerText = tab.replace(/([A-Z])/g, ' $1') + ' Section';
-            event.currentTarget.classList.add('active');
+      <section class="page active" id="dashboardPage">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon primary"><i class="fas fa-users"></i></div>
+            <div class="stat-value" id="statSantri">0</div>
+            <div class="stat-label">Santri</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon success"><i class="fas fa-book-quran"></i></div>
+            <div class="stat-value" id="statProgres">0</div>
+            <div class="stat-label">Hafalan</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon danger"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-value" id="statPelanggaran">0</div>
+            <div class="stat-label">Pelanggaran</div>
+          </div>
+        </div>
 
-            // Load Data based on tab
-            if(tab === 'dashboard') loadDashboard();
-            if(tab === 'santri') loadSantri();
-            if(tab === 'progres') loadProgres();
-            if(tab === 'pelanggaran') loadPelanggaran();
-            if(tab === 'absensi') loadAbsensiFull();
-        }
+        <div class="card">
+          <div class="card-header"><h2 class="card-title"><i class="fas fa-history"></i> Aktivitas Terbaru</h2></div>
+          <div id="recentActivities"><div class="loading active"><div class="spinner"></div></div></div>
+        </div>
+      </section>
 
-        async function loadDashboard() {
-            const res = await fetch(`${SCRIPT_URL}?action=getDashboard`);
-            const data = await res.json();
-            
-            document.getElementById('dash-santri').innerText = data.totalSantri;
-            document.getElementById('dash-progres').innerText = data.totalProgres;
-            document.getElementById('dash-pelanggaran').innerText = data.totalPelanggaran;
-            document.getElementById('dash-absensi').innerText = data.totalAbsensi;
+      <section class="page" id="progresPage">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title"><i class="fas fa-plus-circle"></i> Input Progres</h2></div>
+          <form id="progresForm">
+            <div class="form-group">
+              <label class="form-label">Nama Santri *</label>
+              <div class="autocomplete-wrapper">
+                <input type="text" class="form-input" id="progresNama" placeholder="Cari nama..." required onkeyup="handleAutocomplete(this)">
+                <div class="autocomplete-suggestions" id="suggestions"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipe Hafalan *</label>
+              <select class="form-select" id="progresTipe" required>
+                <option value="Surat Wajib">Surat Wajib</option>
+                <option value="Kitab">Kitab</option>
+                <option value="Fasholatan">Fasholatan</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Keterangan (Surah/Ayat/Halaman)</label>
+              <textarea class="form-textarea" id="progresKet" placeholder="Contoh: Al-Baqarah 1-10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="saveProgresBtn">Simpan Data</button>
+          </form>
+        </div>
+      </section>
 
-            let recentHtml = '';
-            data.recentActivities.forEach(act => {
-                recentHtml += `
-                    <div class="flex items-start p-3 hover:bg-gray-50 rounded-xl transition">
-                        <div class="p-2 bg-blue-50 rounded-lg text-blue-600 mr-4">
-                            <i class="fas ${act.type === 'progres' ? 'fa-book' : 'fa-user-clock'}"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-sm font-bold">${act.namaSantri}</p>
-                            <p class="text-xs text-gray-500">${act.status || act.tipeHafalan || act.pelanggaran}</p>
-                        </div>
-                        <span class="text-[10px] text-gray-300 italic">${new Date(act.tanggal).toLocaleTimeString()}</span>
-                    </div>
-                `;
-            });
-            document.getElementById('recentList').innerHTML = recentHtml;
+      <section class="page" id="absensiPage">
+        <div class="card">
+          <div class="card-header"><h2 class="card-title"><i class="fas fa-calendar-check"></i> Absensi Kelas</h2></div>
+          <div class="form-group">
+            <label class="form-label">Pilih Kelas</label>
+            <select class="form-select" id="absensiKelas" onchange="loadDaftarSantriAbsen()">
+              <option value="">-- Pilih --</option>
+              <option value="TAHFIDZ_PUTRA">Tahfidz Putra</option>
+              <option value="TAHFIDZ_PUTRI">Tahfidz Putri</option>
+              <option value="MADIN_1">Madin 1</option>
+            </select>
+          </div>
+          <div id="listSantriAbsen" class="space-y-2"></div>
+        </div>
+      </section>
 
-            let absensiHtml = '';
-            data.absensiHariIni.forEach(abs => {
-                absensiHtml += `
-                    <div class="flex justify-between items-center p-3 bg-red-50 rounded-xl border border-red-100">
-                        <div class="text-sm font-bold text-red-700">${abs.namaSantri} <span class="text-[10px] text-gray-400 block font-normal">${abs.kelas}</span></div>
-                        <div class="bg-red-500 text-white text-[10px] px-2 py-1 rounded-full font-black">${abs.status}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('absensiList').innerHTML = absensiHtml || '<p class="text-center text-gray-400 italic">Semua santri hadir/belum diabsen.</p>';
-        }
+    </div>
+  </div>
 
-        async function loadSantri() {
-            const res = await fetch(`${SCRIPT_URL}?action=getSantri`);
-            const data = await res.json();
-            let html = '';
-            data.forEach(s => {
-                html += `<tr class="border-b border-gray-50 hover:bg-gray-50">
-                    <td class="p-4 font-mono text-blue-600">${s.id}</td>
-                    <td class="p-4 font-bold">${s.nama}</td>
-                    <td class="p-4"><span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded">${s.kelas}</span></td>
-                    <td class="p-4 text-gray-500">${s.wali}</td>
-                </tr>`;
-            });
-            document.getElementById('santriTable').innerHTML = html;
-        }
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec";
+    let allSantri = [];
 
-        async function loadProgres() {
-            const res = await fetch(`${SCRIPT_URL}?action=getProgres`);
-            const data = await res.json();
-            let html = '';
-            data.forEach(p => {
-                html += `
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-2 bg-blue-600 text-white text-[10px] rounded-bl-xl font-bold uppercase">${p.tipeHafalan}</div>
-                        <h4 class="font-black text-gray-800">${p.namaSantri}</h4>
-                        <div class="mt-4 space-y-1 text-sm text-gray-600">
-                            <p><i class="fas fa-quran mr-2 text-blue-300"></i> ${p.surah || '-'}</p>
-                            <p><i class="fas fa-list-ol mr-2 text-blue-300"></i> Ayat ${p.dariAyat} - ${p.sampaiAyat}</p>
-                        </div>
-                        <div class="mt-4 pt-4 border-t text-[10px] text-gray-400 flex justify-between italic">
-                            <span>${new Date(p.tanggal).toLocaleDateString()}</span>
-                            <span>By: ${p.editor}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('progresGrid').innerHTML = html;
-        }
+    // --- SISTEM LOGIN ---
+    document.getElementById('loginForm').onsubmit = function(e) {
+      e.preventDefault();
+      const u = document.getElementById('loginUsername').value;
+      const p = document.getElementById('loginPassword').value;
+      
+      // Sesuai default Anda
+      if(u === 'admin' && p === 'santri123') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        initApp();
+      } else {
+        alert('Login Gagal!');
+      }
+    };
 
-        async function loadPelanggaran() {
-            const res = await fetch(`${SCRIPT_URL}?action=getPelanggaran`);
-            const data = await res.json();
-            let html = '';
-            data.forEach(p => {
-                html += `
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm flex justify-between items-center">
-                        <div>
-                            <p class="font-bold text-gray-800">${p.namaSantri}</p>
-                            <p class="text-sm text-red-600 font-medium">${p.pelanggaran}</p>
-                            <p class="text-xs text-gray-400 mt-1">${p.keterangan}</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-[10px] text-gray-300 italic block">${new Date(p.tanggal).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('pelanggaranList').innerHTML = html;
-        }
+    function logout() { location.reload(); }
 
-        // Jalankan awal
-        loadDashboard();
-    </script>
+    // --- NAVIGATION ---
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(pageId + 'Page').classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // --- LOAD DATA AWAL ---
+    async function initApp() {
+      fetch(`${SCRIPT_URL}?action=getDashboard`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('statSantri').innerText = data.totalSantri;
+          document.getElementById('statProgres').innerText = data.totalProgres;
+          document.getElementById('statPelanggaran').innerText = data.totalPelanggaran;
+          renderActivities(data.recentActivities);
+        });
+
+      // Load data santri untuk autocomplete
+      fetch(`${SCRIPT_URL}?action=getSantri`)
+        .then(res => res.json())
+        .then(data => { allSantri = data; });
+    }
+
+    // --- AUTOCOMPLETE LOGIC ---
+    function handleAutocomplete(input) {
+      const val = input.value.toLowerCase();
+      const sugBox = document.getElementById('suggestions');
+      sugBox.innerHTML = '';
+      if(val.length < 2) return;
+
+      const matches = allSantri.filter(s => s.nama.toLowerCase().includes(val));
+      matches.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-item';
+        div.innerText = `${m.nama} (${m.kelas})`;
+        div.onclick = () => {
+          input.value = m.nama;
+          sugBox.classList.remove('active');
+        };
+        sugBox.appendChild(div);
+      });
+      sugBox.classList.add('active');
+    }
+
+    // --- RENDER TIMELINE ---
+    function renderActivities(acts) {
+      const container = document.getElementById('recentActivities');
+      let html = '';
+      acts.forEach(a => {
+        html += `
+          <div style="padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem;">
+            <strong>${a.namaSantri}</strong> 
+            <span class="badge ${a.type==='progres'?'badge-success':'badge-danger'}">${a.type}</span>
+            <div style="color: #666; font-size: 0.75rem;">${a.status || a.tipeHafalan} - ${new Date(a.tanggal).toLocaleDateString()}</div>
+          </div>
+        `;
+      });
+      container.innerHTML = html || '<p class="empty-state">Tidak ada aktivitas</p>';
+    }
+
+    // --- FORM SUBMIT (PROGRES) ---
+    document.getElementById('progresForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('saveProgresBtn');
+      btn.disabled = true; btn.innerText = "Menyimpan...";
+
+      const payload = {
+        action: 'addProgres',
+        namaSantri: document.getElementById('progresNama').value,
+        tipeHafalan: document.getElementById('progresTipe').value,
+        keterangan: document.getElementById('progresKet').value
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Penting untuk Apps Script
+          body: JSON.stringify(payload)
+        });
+        alert('Data Berhasil Terkirim!');
+        this.reset();
+      } catch (e) {
+        alert('Error simpan data');
+      } finally {
+        btn.disabled = false; btn.innerText = "Simpan Data";
+      }
+    };
+  </script>
 </body>
 </html>
