@@ -443,14 +443,16 @@
   <script>
     // ========== KONFIGURASI ==========
     // 🔁 GANTI DENGAN URL WEB APP ANDA HASIL DEPLOY
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec'; 
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec'; // PASTE URL ANDA DI SINI
 
-    // Helper fetch ke Apps Script
+    // Helper fetch ke Apps Script - MENGGUNAKAN Content-Type: text/plain UNTUK MENGHINDARI PREFLIGHT
     async function callAppsScript(action, payload = {}) {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify({ action, ...payload }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'text/plain;charset=UTF-8' // ✅ TIDAK MEMICU PREFLIGHT
+        },
+        body: JSON.stringify({ action, ...payload })
       });
       return await response.json();
     }
@@ -556,7 +558,6 @@
         if (tab.textContent.toLowerCase().includes(tabText.toLowerCase())) tab.classList.add('active');
       });
 
-      // Load data sesuai halaman
       if (page === 'dashboard') loadDashboard();
       else if (page === 'absensi') loadAbsensiKelasForInput();
       else if (page === 'data-absensi') loadAbsensiKelasForData();
@@ -927,7 +928,7 @@
     function closeEditProgresModal() { document.getElementById('editProgresModal').classList.remove('active'); }
     function handleEditProgresTipeChange() {
       const t = document.getElementById('editProgresTipe').value;
-      document.getElementById('editSuratWajibFields').style.display = t === 'SuratWajib' ? 'block' : 'none';
+      document.getElementById('editSuratWajibFields').style.display = t === 'Surat Wajib' ? 'block' : 'none';
       document.getElementById('editKitabFields').style.display = t === 'Kitab' ? 'block' : 'none';
       document.getElementById('editLainnyaFields').style.display = t === 'Lainnya' ? 'block' : 'none';
     }
@@ -1111,7 +1112,7 @@
       if (a) { a.className = `alert alert-${type} active`; a.textContent = msg; setTimeout(() => a.classList.remove('active'), 5000); }
     }
 
-    function printAbsensi() { window.print(); } // placeholder
+    function printAbsensi() { window.print(); }
     function printProgres() { window.print(); }
     function printPelanggaran() { window.print(); }
   </script>
