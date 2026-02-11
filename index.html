@@ -1,56 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Manajemen Santri</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
+    </head>
+<body>
+    
+    <iframe src="https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec"></iframe>
 
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-2">
-    <button onclick="showPage('dashboard')" class="p-2">Dashboard</button>
-    <button onclick="showPage('santri')" class="p-2">Santri</button>
-    <button onclick="showPage('absensi')" class="p-2">Absensi</button>
-  </nav>
-
-  <main id="app" class="p-4 pb-20">
-    <div id="loading" class="hidden text-center">Memproses...</div>
-    <div id="content">
-      <h1 class="text-xl font-bold">Selamat Datang</h1>
-      <p>Silakan pilih menu di bawah.</p>
-    </div>
-  </main>
-
-  <script>
-    // URL Web App dari Google Apps Script (Ganti setelah Deploy)
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxU9GN2yQ0d-etzODIO8fy5NRx0H3WND-hXmtKoPsrtgm63FkDuP8iyp4_UO1BoKyZB0A/exec";
-
-    function showPage(page) {
-      document.getElementById('loading').classList.remove('hidden');
-      
-      // Contoh memanggil fungsi getSantriData dari kode GAS Anda
-      if(page === 'santri') {
-        fetch(`${GAS_URL}?action=getSantri`)
-          .then(res => res.json())
-          .then(data => {
-            renderSantri(data);
-            document.getElementById('loading').classList.add('hidden');
-          });
-      }
-    }
-
-    function renderSantri(data) {
-      let html = '<h2 class="text-lg font-bold mb-4">Daftar Santri</h2>';
-      data.forEach(s => {
-        html += `<div class="bg-white p-3 mb-2 rounded shadow">
-                  <p class="font-bold">${s.nama}</p>
-                  <p class="text-sm text-gray-500">${s.kelas}</p>
-                </div>`;
-      });
-      document.getElementById('content').innerHTML = html;
-    }
-  </script>
+    <script>
+        // DISINI TEMPAT MENDAFTARKANNYA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js') // Nama harus sama dengan file di atas
+            .then(() => console.log("Aplikasi Siap di HP!"))
+            .catch((err) => console.log("Gagal daftar sw:", err));
+        }
+    </script>
 </body>
 </html>
