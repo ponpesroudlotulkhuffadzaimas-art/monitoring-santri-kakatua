@@ -7,49 +7,1210 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ... SAMA PERSIS dengan style yang ada ... */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    /* Copy semua CSS dari kode asli */
+    /* ===== CSS LENGKAP ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-light: #d1fae5;
+      --secondary: #4b5563;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #059669;
+      --info: #2563eb;
+      --background: #f3f4f6;
+      --surface: #ffffff;
+      --text: #111827;
+      --text-secondary: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Login Page */
+    #loginPage {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--primary), #065f46);
+    }
+
+    .login-card {
+      background: var(--surface);
+      max-width: 400px;
+      width: 100%;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: var(--text-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: var(--background);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .alert.active {
+      display: block;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--surface);
+      border-left: 4px solid var(--primary);
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 9999;
+    }
+
+    .toast.active {
+      display: flex;
+    }
+
+    .toast-success {
+      border-left-color: var(--success);
+    }
+
+    .toast-error {
+      border-left-color: var(--danger);
+    }
+
+    .toast-info {
+      border-left-color: var(--info);
+    }
+
+    /* Main App */
+    #mainApp {
+      display: none;
+      min-height: 100vh;
+    }
+
+    #mainApp.active {
+      display: block;
+    }
+
+    /* Header */
+    .app-header {
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--primary-light);
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: var(--background);
+      color: var(--danger);
+    }
+
+    /* Navigasi */
+    .nav-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .nav-tab {
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .nav-tab i {
+      font-size: 1rem;
+    }
+
+    /* Main Content */
+    .main-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .page {
+      display: none;
+    }
+
+    /* Dashboard */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 3rem;
+      height: 3rem;
+      background: var(--primary-light);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .stat-content h3 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-content p {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Table */
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background: var(--background);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .data-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-warning {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .badge-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status-cell {
+      text-align: center;
+    }
+
+    .status-badge {
+      display: inline-block;
+      width: 1.75rem;
+      height: 1.75rem;
+      line-height: 1.75rem;
+      border-radius: 0.375rem;
+      font-weight: 600;
+    }
+
+    .status-badge.H {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.I {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-badge.S {
+      background: #fed7aa;
+      color: #92400e;
+    }
+
+    .status-badge.A {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status-badge.empty {
+      background: #f3f4f6;
+      color: #9ca3af;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: none;
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    .action-btn.edit:hover {
+      color: var(--info);
+    }
+
+    .action-btn.delete:hover {
+      color: var(--danger);
+    }
+
+    /* Form Absensi */
+    .attendance-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .attendance-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .attendance-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .attendance-btn.H.active {
+      background: var(--success);
+    }
+
+    .attendance-btn.I.active {
+      background: var(--info);
+    }
+
+    .attendance-btn.S.active {
+      background: var(--warning);
+    }
+
+    .attendance-btn.A.active {
+      background: var(--danger);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      border-radius: 1rem;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+
+    /* Loading */
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .loading.active {
+      display: flex;
+    }
+
+    .spinner {
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Autocomplete */
+    .autocomplete-wrapper {
+      position: relative;
+    }
+
+    .autocomplete-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      margin-top: 0.25rem;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+    }
+
+    .autocomplete-suggestions.active {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .autocomplete-item:hover,
+    .autocomplete-item.selected {
+      background: var(--primary-light);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #d1d5db;
+    }
+
+    /* Utility */
+    .mt-4 { margin-top: 1rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .w-full { width: 100%; }
+    .flex { display: flex; }
+    .gap-2 { gap: 0.5rem; }
+    .text-right { text-align: right; }
   </style>
 </head>
 <body>
-  <!-- Copy SEMUA HTML body dari kode asli -->
-  
+  <!-- ========== HALAMAN LOGIN ========== -->
+  <div id="loginPage">
+    <div class="login-card">
+      <div class="login-header">
+        <h1>SMS</h1>
+        <p>Sistem Manajemen Santri</p>
+      </div>
+      <div id="loginAlert" class="alert alert-error"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername" class="form-label">Username</label>
+          <input type="text" id="loginUsername" class="form-input" placeholder="Masukkan username" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="Masukkan password" required>
+        </div>
+        <button type="submit" id="loginBtn" class="btn btn-primary btn-block">
+          <i class="fas fa-sign-in-alt"></i> Masuk
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========== APLIKASI UTAMA ========== -->
+  <div id="mainApp">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-container">
+        <div class="app-title">
+          <i class="fas fa-mosque"></i>
+          <span>SMS</span>
+        </div>
+        <div class="user-menu">
+          <span id="userName" class="user-avatar">A</span>
+          <button onclick="logout()" class="btn-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigasi -->
+    <div class="nav-tabs">
+      <div class="nav-tab active" onclick="showPage('dashboard', event)">
+        <i class="fas fa-home"></i> Dashboard
+      </div>
+      <div class="nav-tab" onclick="showPage('absensi', event)">
+        <i class="fas fa-calendar-check"></i> Absensi
+      </div>
+      <div class="nav-tab" onclick="showPage('dataAbsensi', event)">
+        <i class="fas fa-table"></i> Data Absensi
+      </div>
+      <div class="nav-tab" onclick="showPage('progres', event)">
+        <i class="fas fa-book-quran"></i> Progres
+      </div>
+      <div class="nav-tab" onclick="showPage('pelanggaran', event)">
+        <i class="fas fa-exclamation-triangle"></i> Pelanggaran
+      </div>
+    </div>
+
+    <!-- Konten Halaman -->
+    <div class="main-content">
+
+      <!-- ===== DASHBOARD ===== -->
+      <div id="dashboardPage" class="page" style="display: block;">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-content">
+              <h3>Total Santri</h3>
+              <p id="statSantri">0</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-book-quran"></i></div>
+            <div class="stat-content">
+              <h3>Total Progres</h3>
+              <p id="statProgres">0</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-content">
+              <h3>Absensi Hari Ini</h3>
+              <p id="statAbsensi">0</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-content">
+              <h3>Pelanggaran</h3>
+              <p id="statPelanggaran">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-calendar-day"></i> Absensi Hari Ini</h3>
+            <span id="todayDate" class="badge badge-info"></span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nama Santri</th>
+                  <th>Kelas</th>
+                  <th>Status</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="absensiHariIniBody">
+                <tr>
+                  <td colspan="4" style="text-align: center;">
+                    <div class="empty-state">
+                      <i class="fas fa-check-circle"></i>
+                      <div>Semua santri hadir hari ini</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-history"></i> Aktivitas Terbaru</h3>
+          </div>
+          <div id="recentActivities">
+            <div class="empty-state">
+              <i class="fas fa-history"></i>
+              <div>Belum ada aktivitas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ABSENSI (INPUT) ===== -->
+      <div id="absensiPage" class="page">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-pen"></i> Input Absensi</h3>
+          </div>
+          <div id="absensiAlert" class="alert alert-error mb-2"></div>
+          <form id="absensiForm">
+            <div class="form-group">
+              <label class="form-label">Tanggal</label>
+              <input type="date" id="absensiTanggal" class="form-input" onchange="checkAbsensiExists()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kelas</label>
+              <select id="absensiKelas" class="form-input" onchange="loadSantriByKelas(); checkAbsensiExists();">
+                <option value="">Pilih kelas</option>
+              </select>
+            </div>
+            <div id="absensiExistsWarning" class="alert alert-warning" style="display: none; background: #fff3cd; color: #856404;">
+              <i class="fas fa-exclamation-triangle"></i> Absensi untuk tanggal dan kelas ini sudah ada!
+            </div>
+            <div id="absensiSantriList" style="display: none;">
+              <div class="card" style="margin-top: 1rem; padding: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                  <strong>Kelas: <span id="absensiKelasLabel"></span></strong>
+                  <span class="badge badge-info">Klik status untuk mengubah</span>
+                </div>
+                <div id="absensiSantriItems"></div>
+                <div class="text-right mt-4">
+                  <button type="button" onclick="saveAbsensi()" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan Absensi
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== DATA ABSENSI (VIEW & EDIT) ===== -->
+      <div id="dataAbsensiPage" class="page">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-table"></i> Data Absensi</h3>
+            <div class="flex gap-2">
+              <button onclick="printAbsensi()" class="btn btn-outline btn-sm">
+                <i class="fas fa-print"></i> Cetak
+              </button>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <div style="flex: 1;">
+              <label class="form-label">Kelas</label>
+              <select id="viewAbsensiKelas" class="form-input" onchange="loadAbsensiBulanList()">
+                <option value="">Pilih Kelas</option>
+              </select>
+            </div>
+            <div style="flex: 1;">
+              <label class="form-label">Bulan</label>
+              <select id="viewAbsensiBulan" class="form-input" onchange="loadAbsensiView()">
+                <option value="">Pilih Bulan</option>
+              </select>
+            </div>
+          </div>
+          <div id="absensiViewLoading" class="loading">
+            <div class="spinner"></div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="absensiTable">
+              <thead id="absensiTableHead"></thead>
+              <tbody id="absensiTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROGRES HAFALAN ===== -->
+      <div id="progresPage" class="page">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Tambah Progres</h3>
+          </div>
+          <div id="progresAlert" class="alert alert-error"></div>
+          <form id="progresForm">
+            <div class="form-group autocomplete-wrapper">
+              <label class="form-label">Nama Santri</label>
+              <input type="text" id="progresNama" class="form-input" placeholder="Ketik nama santri" autocomplete="off">
+              <div id="progresNamaSuggestions" class="autocomplete-suggestions"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipe Hafalan</label>
+              <select id="progresTipe" class="form-input" onchange="handleProgresTipeChange()">
+                <option value="">Pilih tipe</option>
+                <option value="Surat Wajib">Surat Wajib</option>
+                <option value="Kitab">Kitab</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <!-- Surat Wajib -->
+            <div id="suratWajibFields" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Nama Surat</label>
+                <input type="text" id="progresSurah" class="form-input" placeholder="Contoh: Al-Fatihah">
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Dari Ayat</label>
+                  <input type="number" id="progresDariAyat" class="form-input" placeholder="1">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Sampai Ayat</label>
+                  <input type="number" id="progresSampaiAyat" class="form-input" placeholder="7">
+                </div>
+              </div>
+            </div>
+            <!-- Kitab -->
+            <div id="kitabFields" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Nama Kitab</label>
+                <input type="text" id="progresNamaKitab" class="form-input" placeholder="Contoh: Alfiyah">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Jumlah Bait</label>
+                <input type="number" id="progresBait" class="form-input" placeholder="10">
+              </div>
+            </div>
+            <!-- Lainnya -->
+            <div id="lainnyaFields" style="display: none;">
+              <div class="form-group">
+                <label class="form-label">Keterangan</label>
+                <input type="text" id="progresNamaLainnya" class="form-input" placeholder="Contoh: Doa sehari-hari">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Catatan Tambahan</label>
+              <input type="text" id="progresKeterangan" class="form-input" placeholder="Opsional">
+            </div>
+            <button type="submit" id="progresBtn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Simpan Progres
+            </button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list"></i> Riwayat Progres</h3>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="searchProgres" class="form-input" placeholder="Cari..." onkeyup="filterProgres()" style="width: 200px;">
+              <button onclick="printProgres()" class="btn btn-outline btn-sm">
+                <i class="fas fa-print"></i>
+              </button>
+            </div>
+          </div>
+          <div id="progresLoading" class="loading">
+            <div class="spinner"></div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="progresTable">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Nama Santri</th>
+                  <th>Tipe</th>
+                  <th>Detail</th>
+                  <th>Editor</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="progresTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PELANGGARAN ===== -->
+      <div id="pelanggaranPage" class="page">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Tambah Pelanggaran</h3>
+          </div>
+          <div id="pelanggaranAlert" class="alert alert-error"></div>
+          <form id="pelanggaranForm">
+            <div class="form-group autocomplete-wrapper">
+              <label class="form-label">Nama Santri</label>
+              <input type="text" id="pelanggaranNama" class="form-input" placeholder="Ketik nama santri" autocomplete="off">
+              <div id="pelanggaranNamaSuggestions" class="autocomplete-suggestions"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jenis Pelanggaran</label>
+              <input type="text" id="pelanggaranJenis" class="form-input" placeholder="Contoh: Terlambat">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Keterangan</label>
+              <input type="text" id="pelanggaranKeterangan" class="form-input" placeholder="Opsional">
+            </div>
+            <button type="submit" id="pelanggaranBtn" class="btn btn-primary">
+              <i class="fas fa-save"></i> Simpan Pelanggaran
+            </button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list"></i> Riwayat Pelanggaran</h3>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="searchPelanggaran" class="form-input" placeholder="Cari..." onkeyup="filterPelanggaran()" style="width: 200px;">
+              <button onclick="printPelanggaran()" class="btn btn-outline btn-sm">
+                <i class="fas fa-print"></i>
+              </button>
+            </div>
+          </div>
+          <div id="pelanggaranLoading" class="loading">
+            <div class="spinner"></div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="pelanggaranTable">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Nama Santri</th>
+                  <th>Pelanggaran</th>
+                  <th>Keterangan</th>
+                  <th>Editor</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="pelanggaranTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL EDIT ABSENSI ========== -->
+  <div id="editAbsensiModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-edit"></i> Edit Absensi</h2>
+        <button onclick="closeEditAbsensiModal()" class="modal-close">&times;</button>
+      </div>
+      <div>
+        <div style="margin-bottom: 1rem;">
+          <label class="form-label">Nama Santri</label>
+          <input type="text" id="editAbsensiNamaDisplay" class="form-input" readonly>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label class="form-label">Kelas</label>
+          <input type="text" id="editAbsensiKelas" class="form-input" readonly>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label class="form-label">Tanggal</label>
+          <input type="text" id="editAbsensiTanggalDisplay" class="form-input" readonly>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label class="form-label">Status</label>
+          <div class="attendance-buttons">
+            <button type="button" id="editAbsensiBtnH" class="attendance-btn" onclick="setEditAbsensiStatus('H')">H</button>
+            <button type="button" id="editAbsensiBtnI" class="attendance-btn" onclick="setEditAbsensiStatus('I')">I</button>
+            <button type="button" id="editAbsensiBtnS" class="attendance-btn" onclick="setEditAbsensiStatus('S')">S</button>
+            <button type="button" id="editAbsensiBtnA" class="attendance-btn" onclick="setEditAbsensiStatus('A')">A</button>
+          </div>
+        </div>
+        <input type="hidden" id="editAbsensiNamaSantri">
+        <input type="hidden" id="editAbsensiBulan">
+        <input type="hidden" id="editAbsensiTanggal">
+        <div class="text-right" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <button onclick="deleteAbsensiCell()" class="btn btn-outline" style="border-color: var(--danger); color: var(--danger);">
+            <i class="fas fa-trash"></i> Hapus
+          </button>
+          <button onclick="saveEditAbsensi()" class="btn btn-primary">
+            <i class="fas fa-save"></i> Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL EDIT PROGRES ========== -->
+  <div id="editProgresModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-edit"></i> Edit Progres</h2>
+        <button onclick="closeEditProgresModal()" class="modal-close">&times;</button>
+      </div>
+      <div>
+        <input type="hidden" id="editProgresId">
+        <div class="form-group autocomplete-wrapper">
+          <label class="form-label">Nama Santri</label>
+          <input type="text" id="editProgresNama" class="form-input" autocomplete="off">
+          <div id="editProgresNamaSuggestions" class="autocomplete-suggestions"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipe Hafalan</label>
+          <select id="editProgresTipe" class="form-input" onchange="handleEditProgresTipeChange()">
+            <option value="Surat Wajib">Surat Wajib</option>
+            <option value="Kitab">Kitab</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div id="editSuratWajibFields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Nama Surat</label>
+            <input type="text" id="editProgresSurah" class="form-input">
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <div class="form-group" style="flex: 1;">
+              <label class="form-label">Dari Ayat</label>
+              <input type="number" id="editProgresDariAyat" class="form-input">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label class="form-label">Sampai Ayat</label>
+              <input type="number" id="editProgresSampaiAyat" class="form-input">
+            </div>
+          </div>
+        </div>
+        <div id="editKitabFields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Nama Kitab</label>
+            <input type="text" id="editProgresNamaKitab" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jumlah Bait</label>
+            <input type="number" id="editProgresBait" class="form-input">
+          </div>
+        </div>
+        <div id="editLainnyaFields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Keterangan</label>
+            <input type="text" id="editProgresNamaLainnya" class="form-input">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Catatan Tambahan</label>
+          <input type="text" id="editProgresKeterangan" class="form-input">
+        </div>
+        <div class="text-right">
+          <button onclick="saveEditProgres()" class="btn btn-primary">
+            <i class="fas fa-save"></i> Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL EDIT PELANGGARAN ========== -->
+  <div id="editPelanggaranModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fas fa-edit"></i> Edit Pelanggaran</h2>
+        <button onclick="closeEditPelanggaranModal()" class="modal-close">&times;</button>
+      </div>
+      <div>
+        <input type="hidden" id="editPelanggaranId">
+        <div class="form-group autocomplete-wrapper">
+          <label class="form-label">Nama Santri</label>
+          <input type="text" id="editPelanggaranNama" class="form-input" autocomplete="off">
+          <div id="editPelanggaranNamaSuggestions" class="autocomplete-suggestions"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jenis Pelanggaran</label>
+          <input type="text" id="editPelanggaranJenis" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Keterangan</label>
+          <input type="text" id="editPelanggaranKeterangan" class="form-input">
+        </div>
+        <div class="text-right">
+          <button onclick="saveEditPelanggaran()" class="btn btn-primary">
+            <i class="fas fa-save"></i> Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TOAST NOTIFICATION ========== -->
+  <div id="toast" class="toast">
+    <i class="fas fa-info-circle"></i>
+    <span id="toastMessage"></span>
+  </div>
+
   <script>
     // ============================================
-    // KONFIGURASI URL GAS
+    // KONFIGURASI URL GOOGLE APPS SCRIPT
+    // GANTI DENGAN URL DEPLOYMENT ANDA
     // ============================================
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbyF3shWdyC9dlYgK3V6zzKOpu-WF1BMvra87H7PeySJ6-bKh_G3erp_lvEjCaDy2tDTMw/exec';
-    
+
     // ============================================
-    // FUNGSI API UTAMA (GANTI google.script.run)
+    // FUNGSI API UTAMA (MENGGANTIKAN google.script.run)
     // ============================================
-    
     async function callGAS(action, params = {}) {
       try {
         const response = await fetch(GAS_URL, {
           method: 'POST',
-          mode: 'cors',  // Penting untuk CORS
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          mode: 'cors',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action, ...params })
         });
-        
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        
-        const result = await response.json();
-        return result;
+        if (!response.ok) throw new Error('Network response was not ok');
+        return await response.json();
       } catch (error) {
         console.error('API Error:', error);
-        return { success: false, message: 'Terjadi kesalahan koneksi' };
+        return { success: false, message: 'Terjadi kesalahan koneksi atau CORS' };
       }
     }
-    
+
     // ============================================
-    // Global Variables
+    // GLOBAL VARIABLES
     // ============================================
     let currentUser = null;
     let santriData = [];
@@ -59,21 +1220,22 @@
     let pelanggaranData = [];
     let editAbsensiStatus = 'H';
     let absensiHariIniData = [];
-    
-    // Initialize
+
+    // ============================================
+    // INISIALISASI
+    // ============================================
     document.addEventListener('DOMContentLoaded', function() {
+      // Cek login tersimpan
       checkLogin();
       setupEventListeners();
       updateTodayDate();
     });
-    
+
     // ============================================
-    // AUTHENTICATION (MODIFIKASI)
+    // AUTHENTICATION
     // ============================================
-    
     async function handleLogin(e) {
       e.preventDefault();
-      
       const username = document.getElementById('loginUsername').value;
       const password = document.getElementById('loginPassword').value;
       const btn = document.getElementById('loginBtn');
@@ -95,558 +1257,7 @@
         showAlert('loginAlert', response.message, 'error');
       }
     }
-    
-    // ============================================
-    // DASHBOARD (MODIFIKASI)
-    // ============================================
-    
-    async function loadDashboard() {
-      const response = await callGAS('getDashboardStats');
-      
-      if (response.success) {
-        const stats = response.data;
-        document.getElementById('statSantri').textContent = stats.totalSantri;
-        document.getElementById('statProgres').textContent = stats.totalProgres;
-        document.getElementById('statAbsensi').textContent = stats.totalAbsensi;
-        document.getElementById('statPelanggaran').textContent = stats.totalPelanggaran;
-        
-        renderAbsensiHariIni(stats.absensiHariIni);
-        renderRecentActivities(stats.recentActivities);
-        updateTodayDate();
-      } else {
-        console.error('Error loading dashboard:', response.message);
-        showToast('Error memuat dashboard', 'error');
-      }
-    }
-    
-    // ============================================
-    // KELAS DATA (MODIFIKASI)
-    // ============================================
-    
-    async function loadKelas() {
-      const response = await callGAS('getKelasData');
-      if (response.success) {
-        kelasData = response.data;
-      }
-    }
-    
-    async function loadAbsensiKelasForInput() {
-      const response = await callGAS('getKelasData');
-      if (response.success) {
-        const select = document.getElementById('absensiKelas');
-        select.innerHTML = '<option value="">Pilih kelas</option>' + 
-          response.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
-      }
-    }
-    
-    async function loadAbsensiKelasForData() {
-      const response = await callGAS('getKelasData');
-      if (response.success) {
-        const select = document.getElementById('viewAbsensiKelas');
-        select.innerHTML = '<option value="">Pilih Kelas</option>' + 
-          response.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
-      }
-    }
-    
-    async function loadSantriData() {
-      const response = await callGAS('getSantriData');
-      if (response.success) {
-        santriData = response.data;
-      }
-    }
-    
-    // ============================================
-    // ABSENSI FUNCTIONS (MODIFIKASI)
-    // ============================================
-    
-    async function loadSantriByKelas() {
-      const kelas = document.getElementById('absensiKelas').value;
-      
-      if (!kelas) {
-        document.getElementById('absensiSantriList').style.display = 'none';
-        return;
-      }
-      
-      const response = await callGAS('getSantriByKelas', { kelas });
-      
-      if (response.success) {
-        const container = document.getElementById('absensiSantriItems');
-        document.getElementById('absensiKelasLabel').textContent = kelas;
-        
-        if (!response.data || response.data.length === 0) {
-          container.innerHTML = `
-            <div class="empty-state">
-              <div class="empty-state-text">Tidak ada santri di kelas ini</div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = response.data.map(santri => `
-            <div style="background: var(--background); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.75rem;">
-              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-                <strong>${santri.nama}</strong>
-                <div class="attendance-buttons">
-                  <button type="button" class="attendance-btn H active" data-nama="${santri.nama}" data-status="H" onclick="setAttendanceStatus(this)">H</button>
-                  <button type="button" class="attendance-btn I" data-nama="${santri.nama}" data-status="I" onclick="setAttendanceStatus(this)">I</button>
-                  <button type="button" class="attendance-btn S" data-nama="${santri.nama}" data-status="S" onclick="setAttendanceStatus(this)">S</button>
-                  <button type="button" class="attendance-btn A" data-nama="${santri.nama}" data-status="A" onclick="setAttendanceStatus(this)">A</button>
-                </div>
-              </div>
-              <div style="margin-top: 0.5rem;">
-                <input type="text" class="form-input" id="keterangan-${santri.nama.replace(/\s+/g, '-')}" placeholder="Keterangan..." style="font-size: 0.875rem;">
-              </div>
-            </div>
-          `).join('');
-        }
-        
-        document.getElementById('absensiSantriList').style.display = 'block';
-      }
-    }
-    
-    async function checkAbsensiExists() {
-      const tanggal = document.getElementById('absensiTanggal').value;
-      const kelas = document.getElementById('absensiKelas').value;
-      
-      if (!tanggal || !kelas) {
-        document.getElementById('absensiExistsWarning').style.display = 'none';
-        return;
-      }
-      
-      const dateObj = new Date(tanggal);
-      const bulan = getBulanName(dateObj.getMonth() + 1);
-      const tanggalNum = dateObj.getDate();
-      
-      const response = await callGAS('checkAbsensiExists', { kelas, bulan, tanggal: tanggalNum, namaSantri: '' });
-      
-      if (response.success) {
-        document.getElementById('absensiExistsWarning').style.display = response.data.exists ? 'block' : 'none';
-      }
-    }
-    
-    async function saveAbsensi() {
-      const tanggal = document.getElementById('absensiTanggal').value;
-      const kelas = document.getElementById('absensiKelas').value;
-      
-      if (!tanggal || !kelas) {
-        showToast('Mohon pilih tanggal dan kelas', 'error');
-        return;
-      }
-      
-      const santriItems = document.querySelectorAll('#absensiSantriItems > div');
-      const santriInputData = [];
-      
-      santriItems.forEach(item => {
-        const nama = item.querySelector('strong').textContent;
-        const statusBtn = item.querySelector('.attendance-btn.active');
-        const status = statusBtn ? statusBtn.dataset.status : 'H';
-        const keteranganInput = item.querySelector('input[type="text"]');
-        const keterangan = keteranganInput ? keteranganInput.value.trim() : '';
-        
-        santriInputData.push({
-          nama: nama,
-          status: status,
-          keterangan: keterangan
-        });
-      });
-      
-      if (santriInputData.length === 0) {
-        showToast('Tidak ada data santri untuk disimpan', 'error');
-        return;
-      }
-      
-      const data = {
-        tanggal: tanggal,
-        kelas: kelas,
-        santri: santriInputData,
-        editor: currentUser.name
-      };
-      
-      const response = await callGAS('addAbsensi', { data });
-      
-      if (response.success) {
-        showToast(response.message, 'success');
-        document.getElementById('absensiSantriItems').innerHTML = '';
-        document.getElementById('absensiSantriList').style.display = 'none';
-        loadDashboard();
-        
-        const viewKelas = document.getElementById('viewAbsensiKelas').value;
-        const viewBulan = document.getElementById('viewAbsensiBulan').value;
-        if (viewKelas === kelas) {
-          const dateObj = new Date(tanggal);
-          const bulan = getBulanName(dateObj.getMonth() + 1);
-          if (viewBulan === bulan) {
-            loadAbsensiView();
-          }
-        }
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function loadAbsensiBulanList() {
-      const kelas = document.getElementById('viewAbsensiKelas').value;
-      
-      if (!kelas) {
-        document.getElementById('viewAbsensiBulan').innerHTML = '<option value="">Pilih Bulan</option>';
-        return;
-      }
-      
-      document.getElementById('absensiViewLoading').classList.add('active');
-      
-      const response = await callGAS('getAbsensiBulan', { kelas });
-      
-      document.getElementById('absensiViewLoading').classList.remove('active');
-      
-      if (response.success) {
-        const select = document.getElementById('viewAbsensiBulan');
-        select.innerHTML = '<option value="">Pilih Bulan</option>' + 
-          response.data.map(b => `<option value="${b.nama}">${b.nama}</option>`).join('');
-      } else {
-        showToast('Error memuat daftar bulan', 'error');
-      }
-    }
-    
-    async function loadAbsensiView() {
-      const kelas = document.getElementById('viewAbsensiKelas').value;
-      const bulan = document.getElementById('viewAbsensiBulan').value;
-      
-      if (!kelas || !bulan) {
-        return;
-      }
-      
-      document.getElementById('absensiViewLoading').classList.add('active');
-      
-      const response = await callGAS('getAbsensiData', { filter: { kelas, bulan } });
-      
-      document.getElementById('absensiViewLoading').classList.remove('active');
-      
-      if (response.success) {
-        renderAbsensiTable(response.data, bulan);
-      } else {
-        showToast('Error memuat data absensi', 'error');
-      }
-    }
-    
-    async function saveEditAbsensi() {
-      const kelas = document.getElementById('editAbsensiKelas').value;
-      const bulan = document.getElementById('editAbsensiBulan').value;
-      const tanggal = document.getElementById('editAbsensiTanggal').value;
-      const namaSantri = document.getElementById('editAbsensiNamaSantri').value;
-      
-      const data = {
-        kelas: kelas,
-        bulan: bulan,
-        tanggal: tanggal,
-        namaSantri: namaSantri,
-        status: editAbsensiStatus
-      };
-      
-      const response = await callGAS('updateAbsensi', { id: '', data });
-      
-      if (response.success) {
-        closeEditAbsensiModal();
-        showToast(response.message, 'success');
-        loadAbsensiView();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function deleteAbsensiCell() {
-      if (!confirm('Apakah Anda yakin ingin menghapus absensi ini?')) return;
-      
-      const kelas = document.getElementById('editAbsensiKelas').value;
-      const bulan = document.getElementById('editAbsensiBulan').value;
-      const tanggal = document.getElementById('editAbsensiTanggal').value;
-      const namaSantri = document.getElementById('editAbsensiNamaSantri').value;
-      
-      const data = {
-        kelas: kelas,
-        bulan: bulan,
-        tanggal: tanggal,
-        namaSantri: namaSantri
-      };
-      
-      const response = await callGAS('deleteAbsensi', { data });
-      
-      if (response.success) {
-        closeEditAbsensiModal();
-        showToast(response.message, 'success');
-        loadAbsensiView();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    // ============================================
-    // PROGRES FUNCTIONS (MODIFIKASI)
-    // ============================================
-    
-    async function handleProgresSubmit(e) {
-      e.preventDefault();
-      
-      const namaSantri = document.getElementById('progresNama').value.trim();
-      const tipeHafalan = document.getElementById('progresTipe').value;
-      
-      if (!namaSantri || !tipeHafalan) {
-        showAlert('progresAlert', 'Mohon lengkapi semua field yang wajib diisi', 'error');
-        return;
-      }
-      
-      const btn = document.getElementById('progresBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px;"></div>';
-      
-      let data = {
-        namaSantri: namaSantri,
-        tipeHafalan: tipeHafalan,
-        keterangan: document.getElementById('progresKeterangan').value.trim(),
-        editor: currentUser.name
-      };
-      
-      if (tipeHafalan === 'Surat Wajib') {
-        data.surah = document.getElementById('progresSurah').value.trim();
-        data.dariAyat = document.getElementById('progresDariAyat').value;
-        data.sampaiAyat = document.getElementById('progresSampaiAyat').value;
-      } else if (tipeHafalan === 'Kitab') {
-        data.surah = document.getElementById('progresNamaKitab').value.trim();
-        data.bait = document.getElementById('progresBait').value;
-      } else if (tipeHafalan === 'Lainnya') {
-        data.surah = document.getElementById('progresNamaLainnya').value.trim();
-      } else {
-        data.surah = '-';
-      }
-      
-      const response = await callGAS('addProgres', { data });
-      
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-save"></i> Simpan Progres';
-      
-      if (response.success) {
-        document.getElementById('progresForm').reset();
-        handleProgresTipeChange();
-        showToast(response.message, 'success');
-        loadProgresData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function loadProgresData() {
-      document.getElementById('progresLoading').classList.add('active');
-      
-      const response = await callGAS('getProgresData', { filter: {} });
-      
-      document.getElementById('progresLoading').classList.remove('active');
-      
-      if (response.success) {
-        progresData = response.data;
-        renderProgresTable(response.data);
-      } else {
-        showToast('Error memuat data progres', 'error');
-      }
-    }
-    
-    async function saveEditProgres() {
-      const id = document.getElementById('editProgresId').value;
-      const namaSantri = document.getElementById('editProgresNama').value.trim();
-      const tipeHafalan = document.getElementById('editProgresTipe').value;
-      
-      if (!namaSantri || !tipeHafalan) {
-        showToast('Mohon lengkapi semua field yang wajib diisi', 'error');
-        return;
-      }
-      
-      let data = {
-        namaSantri: namaSantri,
-        tipeHafalan: tipeHafalan,
-        keterangan: document.getElementById('editProgresKeterangan').value.trim(),
-        editor: currentUser.name
-      };
-      
-      if (tipeHafalan === 'Surat Wajib') {
-        data.surah = document.getElementById('editProgresSurah').value.trim();
-        data.dariAyat = document.getElementById('editProgresDariAyat').value;
-        data.sampaiAyat = document.getElementById('editProgresSampaiAyat').value;
-      } else if (tipeHafalan === 'Kitab') {
-        data.surah = document.getElementById('editProgresNamaKitab').value.trim();
-        data.bait = document.getElementById('editProgresBait').value;
-      } else if (tipeHafalan === 'Lainnya') {
-        data.surah = document.getElementById('editProgresNamaLainnya').value.trim();
-      } else {
-        data.surah = '-';
-      }
-      
-      const response = await callGAS('updateProgres', { id, data });
-      
-      if (response.success) {
-        closeEditProgresModal();
-        showToast(response.message, 'success');
-        loadProgresData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function deleteProgres(id) {
-      if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
-      
-      const response = await callGAS('deleteProgres', { id });
-      
-      if (response.success) {
-        showToast(response.message, 'success');
-        loadProgresData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    // ============================================
-    // PELANGGARAN FUNCTIONS (MODIFIKASI)
-    // ============================================
-    
-    async function handlePelanggaranSubmit(e) {
-      e.preventDefault();
-      
-      const namaSantri = document.getElementById('pelanggaranNama').value.trim();
-      const pelanggaran = document.getElementById('pelanggaranJenis').value.trim();
-      
-      if (!namaSantri || !pelanggaran) {
-        showAlert('pelanggaranAlert', 'Mohon lengkapi semua field yang wajib diisi', 'error');
-        return;
-      }
-      
-      const btn = document.getElementById('pelanggaranBtn');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px;"></div>';
-      
-      const data = {
-        namaSantri: namaSantri,
-        pelanggaran: pelanggaran,
-        keterangan: document.getElementById('pelanggaranKeterangan').value.trim(),
-        editor: currentUser.name
-      };
-      
-      const response = await callGAS('addPelanggaran', { data });
-      
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-save"></i> Simpan Pelanggaran';
-      
-      if (response.success) {
-        document.getElementById('pelanggaranForm').reset();
-        showToast(response.message, 'success');
-        loadPelanggaranData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function loadPelanggaranData() {
-      document.getElementById('pelanggaranLoading').classList.add('active');
-      
-      const response = await callGAS('getPelanggaranData', { filter: {} });
-      
-      document.getElementById('pelanggaranLoading').classList.remove('active');
-      
-      if (response.success) {
-        pelanggaranData = response.data;
-        renderPelanggaranTable(response.data);
-      } else {
-        showToast('Error memuat data pelanggaran', 'error');
-      }
-    }
-    
-    async function saveEditPelanggaran() {
-      const id = document.getElementById('editPelanggaranId').value;
-      const namaSantri = document.getElementById('editPelanggaranNama').value.trim();
-      const pelanggaran = document.getElementById('editPelanggaranJenis').value.trim();
-      
-      if (!namaSantri || !pelanggaran) {
-        showToast('Mohon lengkapi semua field yang wajib diisi', 'error');
-        return;
-      }
-      
-      const data = {
-        namaSantri: namaSantri,
-        pelanggaran: pelanggaran,
-        keterangan: document.getElementById('editPelanggaranKeterangan').value.trim(),
-        editor: currentUser.name
-      };
-      
-      const response = await callGAS('updatePelanggaran', { id, data });
-      
-      if (response.success) {
-        closeEditPelanggaranModal();
-        showToast(response.message, 'success');
-        loadPelanggaranData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    async function deletePelanggaran(id) {
-      if (!confirm('Apakah Anda yakin ingin menghapus data ini?')) return;
-      
-      const response = await callGAS('deletePelanggaran', { id });
-      
-      if (response.success) {
-        showToast(response.message, 'success');
-        loadPelanggaranData();
-      } else {
-        showToast(response.message, 'error');
-      }
-    }
-    
-    // ============================================
-    // FUNGSI-FUNGSI LAINNYA (SAMA PERSIS)
-    // ============================================
-    
-    function updateTodayDate() {
-      const today = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('todayDate').textContent = today.toLocaleDateString('id-ID', options);
-    }
-    
-    function setupEventListeners() {
-      document.getElementById('loginForm').addEventListener('submit', handleLogin);
-      document.getElementById('progresForm').addEventListener('submit', handleProgresSubmit);
-      document.getElementById('pelanggaranForm').addEventListener('submit', handlePelanggaranSubmit);
-      
-      setupAutocomplete('progresNama', 'progresNamaSuggestions');
-      setupAutocomplete('pelanggaranNama', 'pelanggaranNamaSuggestions');
-      setupAutocomplete('editProgresNama', 'editProgresNamaSuggestions');
-      setupAutocomplete('editPelanggaranNama', 'editPelanggaranNamaSuggestions');
-      
-      document.getElementById('absensiTanggal').valueAsDate = new Date();
-      setupNavigation();
-    }
-    
-    function setupNavigation() {
-      const navTabs = document.querySelector('.nav-tabs');
-      if (navTabs) {
-        navTabs.addEventListener('click', function(e) {
-          const tab = e.target.closest('.nav-tab');
-          if (!tab) return;
-          
-          e.preventDefault();
-          
-          let page = 'dashboard';
-          const tabText = tab.textContent.trim().toLowerCase();
-          
-          if (tabText.includes('absensi') && !tabText.includes('data')) {
-            page = 'absensi';
-          } else if (tabText.includes('data absensi') || tabText.includes('data-absensi')) {
-            page = 'dataAbsensi';
-          } else if (tabText.includes('progres')) {
-            page = 'progres';
-          } else if (tabText.includes('pelanggaran')) {
-            page = 'pelanggaran';
-          }
-          
-          showPage(page, e);
-        });
-      }
-    }
-    
+
     function checkLogin() {
       const savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
@@ -654,7 +1265,7 @@
         showMainApp();
       }
     }
-    
+
     function logout() {
       localStorage.removeItem('currentUser');
       currentUser = null;
@@ -664,448 +1275,420 @@
       document.getElementById('loginPassword').value = '';
       showToast('Logout berhasil', 'info');
     }
-    
+
     function showMainApp() {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('mainApp').classList.add('active');
-      
-      document.getElementById('userName').textContent = currentUser.name || 'Administrator';
-      document.getElementById('userAvatar').textContent = (currentUser.name || 'A').charAt(0).toUpperCase();
-      
+      document.getElementById('userName').textContent = currentUser?.name || 'Administrator';
+      document.getElementById('userAvatar').textContent = (currentUser?.name || 'A').charAt(0).toUpperCase();
       showPage('dashboard');
-      
       loadKelas();
       loadSantriData();
     }
-    
+
+    // ============================================
+    // NAVIGASI HALAMAN
+    // ============================================
     function showPage(page, event = null) {
-      document.querySelectorAll('.page').forEach(p => {
-        if (p && p.style) {
-          p.style.display = 'none';
-        }
-      });
-      
-      document.querySelectorAll('.nav-tabs .nav-tab').forEach(t => {
-        if (t) {
-          t.classList.remove('active');
-        }
-      });
-      
-      let pageElementId = page + 'Page';
-      
-      if (page === 'data-absensi') {
-        pageElementId = 'dataAbsensiPage';
-      }
-      
-      const pageElement = document.getElementById(pageElementId);
-      if (pageElement && pageElement.style) {
-        pageElement.style.display = 'block';
-      } else {
-        const dashboardElement = document.getElementById('dashboardPage');
-        if (dashboardElement && dashboardElement.style) {
-          dashboardElement.style.display = 'block';
-          page = 'dashboard';
-        }
-      }
-      
-      if (event && event.target) {
+      // Sembunyikan semua halaman
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      // Nonaktifkan semua tab
+      document.querySelectorAll('.nav-tabs .nav-tab').forEach(t => t.classList.remove('active'));
+
+      let pageId = page + 'Page';
+      if (page === 'dataAbsensi') pageId = 'dataAbsensiPage';
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) targetPage.style.display = 'block';
+
+      // Aktifkan tab yang sesuai
+      if (event?.target) {
         const tab = event.target.closest('.nav-tab');
-        if (tab) {
-          tab.classList.add('active');
-        }
+        if (tab) tab.classList.add('active');
       } else {
+        // Cari tab berdasarkan teks
         const tabs = document.querySelectorAll('.nav-tab');
         tabs.forEach(tab => {
-          if (tab.textContent.toLowerCase().includes(page.replace('-', ' ').toLowerCase())) {
+          if (tab.textContent.toLowerCase().includes(page.replace('data', '').toLowerCase())) {
             tab.classList.add('active');
           }
         });
       }
-      
-      if (page === 'dashboard') {
-        loadDashboard();
-      } else if (page === 'absensi') {
-        loadAbsensiKelasForInput();
-      } else if (page === 'data-absensi' || page === 'dataAbsensi') {
-        loadAbsensiKelasForData();
-      } else if (page === 'progres') {
-        loadProgresData();
-      } else if (page === 'pelanggaran') {
-        loadPelanggaranData();
+
+      // Muat data sesuai halaman
+      if (page === 'dashboard') loadDashboard();
+      else if (page === 'absensi') loadAbsensiKelasForInput();
+      else if (page === 'dataAbsensi') loadAbsensiKelasForData();
+      else if (page === 'progres') loadProgresData();
+      else if (page === 'pelanggaran') loadPelanggaranData();
+    }
+
+    // ============================================
+    // DASHBOARD
+    // ============================================
+    async function loadDashboard() {
+      const response = await callGAS('getDashboardStats');
+      if (response.success) {
+        const stats = response.data;
+        document.getElementById('statSantri').textContent = stats.totalSantri || 0;
+        document.getElementById('statProgres').textContent = stats.totalProgres || 0;
+        document.getElementById('statAbsensi').textContent = stats.totalAbsensi || 0;
+        document.getElementById('statPelanggaran').textContent = stats.totalPelanggaran || 0;
+        renderAbsensiHariIni(stats.absensiHariIni || []);
+        renderRecentActivities(stats.recentActivities || []);
+        updateTodayDate();
+      } else {
+        console.error('Dashboard error:', response.message);
       }
     }
-    
-    function renderAbsensiHariIni(absensiList) {
+
+    function renderAbsensiHariIni(data) {
       const tbody = document.getElementById('absensiHariIniBody');
-      absensiHariIniData = absensiList || [];
-      
-      if (!absensiList || absensiList.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4" style="text-align: center;">
-              <div style="padding: 2rem; color: var(--text-secondary);">
-                <i class="fas fa-check-circle" style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--success);"></i>
-                <div>Semua santri hadir hari ini</div>
-              </div>
-            </td>
-          </tr>
-        `;
-        return;
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;"><div class="empty-state"><i class="fas fa-check-circle"></i><div>Semua santri hadir hari ini</div></div></td></tr>`;
+      } else {
+        tbody.innerHTML = data.map(item => {
+          let badgeClass = 'badge-success', label = 'Hadir';
+          if (item.status === 'I') { badgeClass = 'badge-info'; label = 'Izin'; }
+          else if (item.status === 'S') { badgeClass = 'badge-warning'; label = 'Sakit'; }
+          else if (item.status === 'A') { badgeClass = 'badge-danger'; label = 'Alpa'; }
+          return `<tr><td><strong>${item.namaSantri}</strong></td><td>${item.kelas}</td><td><span class="badge ${badgeClass}">${label}</span></td><td>${item.keterangan || '-'}</td></tr>`;
+        }).join('');
       }
-      
-      tbody.innerHTML = absensiList.map(item => {
-        let badgeClass = 'badge-success';
-        let statusLabel = 'Hadir';
-        
-        if (item.status === 'I') {
-          badgeClass = 'badge-info';
-          statusLabel = 'Izin';
-        } else if (item.status === 'S') {
-          badgeClass = 'badge-warning';
-          statusLabel = 'Sakit';
-        } else if (item.status === 'A') {
-          badgeClass = 'badge-danger';
-          statusLabel = 'Alpa';
-        }
-        
-        return `
-          <tr>
-            <td><strong>${item.namaSantri}</strong></td>
-            <td>${item.kelas}</td>
-            <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
-            <td>${item.keterangan || '-'}</td>
-          </tr>
-        `;
-      }).join('');
     }
-    
+
     function renderRecentActivities(activities) {
       const container = document.getElementById('recentActivities');
-      
-      if (!activities || activities.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <div class="empty-state-icon"><i class="fas fa-history"></i></div>
-            <div class="empty-state-text">Belum ada aktivitas</div>
-            <div class="empty-state-subtext">Mulai input data untuk melihat aktivitas terbaru</div>
-          </div>
-        `;
-        return;
-      }
-      
-      let html = '<div class="table-responsive"><table class="data-table"><tbody>';
-      
-      activities.forEach(activity => {
-        const date = new Date(activity.tanggal).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
+      if (!activities.length) {
+        container.innerHTML = `<div class="empty-state"><i class="fas fa-history"></i><div>Belum ada aktivitas</div></div>`;
+      } else {
+        let html = '<div class="table-responsive"><table class="data-table"><tbody>';
+        activities.forEach(act => {
+          const date = new Date(act.tanggal).toLocaleDateString('id-ID');
+          let badge = '', icon = '', label = '', detail = '';
+          if (act.type === 'absensi') { badge = 'badge-info'; icon = 'fa-calendar-check'; label = 'Absensi'; detail = act.kelas; }
+          else if (act.type === 'progres') { badge = 'badge-success'; icon = 'fa-book-quran'; label = 'Progres'; detail = act.tipeHafalan; }
+          else { badge = 'badge-danger'; icon = 'fa-exclamation-triangle'; label = 'Pelanggaran'; detail = act.pelanggaran; }
+          html += `<tr><td><span class="badge ${badge}">${label}</span></td><td><strong>${act.namaSantri}</strong></td><td>${detail}</td><td><small>${date}</small></td></tr>`;
         });
-        
-        let icon, badge, label, detail;
-        
-        if (activity.type === 'absensi') {
-          icon = 'fa-calendar-check';
-          badge = 'badge-info';
-          label = 'Absensi';
-          detail = activity.kelas;
-        } else if (activity.type === 'progres') {
-          icon = 'fa-book-quran';
-          badge = 'badge-success';
-          label = 'Progres';
-          detail = activity.tipeHafalan;
+        html += '</tbody></table></div>';
+        container.innerHTML = html;
+      }
+    }
+
+    // ============================================
+    // KELAS & SANTRI
+    // ============================================
+    async function loadKelas() {
+      const res = await callGAS('getKelasData');
+      if (res.success) kelasData = res.data;
+    }
+
+    async function loadSantriData() {
+      const res = await callGAS('getSantriData');
+      if (res.success) santriData = res.data;
+    }
+
+    async function loadAbsensiKelasForInput() {
+      const res = await callGAS('getKelasData');
+      if (res.success) {
+        const select = document.getElementById('absensiKelas');
+        select.innerHTML = '<option value="">Pilih kelas</option>' + 
+          res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
+      }
+    }
+
+    async function loadAbsensiKelasForData() {
+      const res = await callGAS('getKelasData');
+      if (res.success) {
+        const select = document.getElementById('viewAbsensiKelas');
+        select.innerHTML = '<option value="">Pilih Kelas</option>' + 
+          res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
+      }
+    }
+
+    // ============================================
+    // ABSENSI
+    // ============================================
+    async function loadSantriByKelas() {
+      const kelas = document.getElementById('absensiKelas').value;
+      if (!kelas) { document.getElementById('absensiSantriList').style.display = 'none'; return; }
+      const res = await callGAS('getSantriByKelas', { kelas });
+      if (res.success) {
+        const container = document.getElementById('absensiSantriItems');
+        document.getElementById('absensiKelasLabel').textContent = kelas;
+        if (!res.data || !res.data.length) {
+          container.innerHTML = `<div class="empty-state"><div>Tidak ada santri di kelas ini</div></div>`;
         } else {
-          icon = 'fa-exclamation-triangle';
-          badge = 'badge-danger';
-          label = 'Pelanggaran';
-          detail = activity.pelanggaran;
+          container.innerHTML = res.data.map(s => `
+            <div style="background: var(--background); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                <strong>${s.nama}</strong>
+                <div class="attendance-buttons">
+                  <button type="button" class="attendance-btn H active" data-nama="${s.nama}" data-status="H" onclick="setAttendanceStatus(this)">H</button>
+                  <button type="button" class="attendance-btn I" data-nama="${s.nama}" data-status="I" onclick="setAttendanceStatus(this)">I</button>
+                  <button type="button" class="attendance-btn S" data-nama="${s.nama}" data-status="S" onclick="setAttendanceStatus(this)">S</button>
+                  <button type="button" class="attendance-btn A" data-nama="${s.nama}" data-status="A" onclick="setAttendanceStatus(this)">A</button>
+                </div>
+              </div>
+              <div style="margin-top: 0.5rem;">
+                <input type="text" class="form-input" id="keterangan-${s.nama.replace(/\s+/g, '-')}" placeholder="Keterangan..." style="font-size: 0.875rem;">
+              </div>
+            </div>
+          `).join('');
         }
-        
-        html += `
-          <tr>
-            <td>
-              <span class="badge ${badge}">${label}</span>
-            </td>
-            <td><strong>${activity.namaSantri}</strong></td>
-            <td>${detail}</td>
-            <td><small>${date}</small></td>
-          </tr>
-        `;
-      });
-      
-      html += '</tbody></table></div>';
-      container.innerHTML = html;
-    }
-    
-    function setupAutocomplete(inputId, suggestionsId) {
-      const input = document.getElementById(inputId);
-      const suggestions = document.getElementById(suggestionsId);
-      let selectedIndex = -1;
-      
-      if (!input || !suggestions) return;
-      
-      input.addEventListener('input', function() {
-        const value = this.value.trim();
-        
-        if (value.length < 2) {
-          suggestions.classList.remove('active');
-          return;
-        }
-        
-        const matches = santriData.filter(s => 
-          s.nama.toLowerCase().includes(value.toLowerCase())
-        );
-        
-        if (matches.length === 0) {
-          suggestions.classList.remove('active');
-          return;
-        }
-        
-        suggestions.innerHTML = matches.map(s => 
-          `<div class="autocomplete-item" data-nama="${s.nama}">${s.nama}</div>`
-        ).join('');
-        
-        suggestions.classList.add('active');
-        selectedIndex = -1;
-      });
-      
-      input.addEventListener('keydown', function(e) {
-        const items = suggestions.querySelectorAll('.autocomplete-item');
-        
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
-          updateSelection(items);
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          selectedIndex = Math.max(selectedIndex - 1, 0);
-          updateSelection(items);
-        } else if (e.key === 'Enter' && selectedIndex >= 0) {
-          e.preventDefault();
-          items[selectedIndex].click();
-        } else if (e.key === 'Escape') {
-          suggestions.classList.remove('active');
-        }
-      });
-      
-      suggestions.addEventListener('click', function(e) {
-        const item = e.target.closest('.autocomplete-item');
-        if (item) {
-          input.value = item.dataset.nama;
-          suggestions.classList.remove('active');
-        }
-      });
-      
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('.autocomplete-wrapper')) {
-          suggestions.classList.remove('active');
-        }
-      });
-      
-      function updateSelection(items) {
-        items.forEach((item, index) => {
-          item.classList.toggle('selected', index === selectedIndex);
-        });
+        document.getElementById('absensiSantriList').style.display = 'block';
       }
     }
-    
+
+    async function checkAbsensiExists() {
+      const tanggal = document.getElementById('absensiTanggal').value;
+      const kelas = document.getElementById('absensiKelas').value;
+      if (!tanggal || !kelas) { document.getElementById('absensiExistsWarning').style.display = 'none'; return; }
+      const dateObj = new Date(tanggal);
+      const bulan = getBulanName(dateObj.getMonth() + 1);
+      const tanggalNum = dateObj.getDate();
+      const res = await callGAS('checkAbsensiExists', { kelas, bulan, tanggal: tanggalNum, namaSantri: '' });
+      if (res.success) {
+        document.getElementById('absensiExistsWarning').style.display = res.data.exists ? 'block' : 'none';
+      }
+    }
+
     function setAttendanceStatus(btn) {
       const nama = btn.dataset.nama;
-      
-      document.querySelectorAll(`.attendance-buttons button[data-nama="${nama}"]`).forEach(b => {
-        b.classList.remove('active');
-      });
-      
+      document.querySelectorAll(`.attendance-buttons button[data-nama="${nama}"]`).forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
-    
+
+    async function saveAbsensi() {
+      const tanggal = document.getElementById('absensiTanggal').value;
+      const kelas = document.getElementById('absensiKelas').value;
+      if (!tanggal || !kelas) { showToast('Pilih tanggal dan kelas', 'error'); return; }
+      const santriItems = document.querySelectorAll('#absensiSantriItems > div');
+      const santriInputData = [];
+      santriItems.forEach(item => {
+        const nama = item.querySelector('strong').textContent;
+        const statusBtn = item.querySelector('.attendance-btn.active');
+        const status = statusBtn ? statusBtn.dataset.status : 'H';
+        const keteranganInput = item.querySelector('input[type="text"]');
+        const keterangan = keteranganInput ? keteranganInput.value.trim() : '';
+        santriInputData.push({ nama, status, keterangan });
+      });
+      if (!santriInputData.length) { showToast('Tidak ada data santri', 'error'); return; }
+      const data = { tanggal, kelas, santri: santriInputData, editor: currentUser?.name || 'Admin' };
+      const res = await callGAS('addAbsensi', { data });
+      if (res.success) {
+        showToast(res.message, 'success');
+        document.getElementById('absensiSantriItems').innerHTML = '';
+        document.getElementById('absensiSantriList').style.display = 'none';
+        loadDashboard();
+        // Refresh data absensi jika sedang dilihat
+        const viewKelas = document.getElementById('viewAbsensiKelas')?.value;
+        const viewBulan = document.getElementById('viewAbsensiBulan')?.value;
+        if (viewKelas === kelas) {
+          const dateObj = new Date(tanggal);
+          const bulan = getBulanName(dateObj.getMonth() + 1);
+          if (viewBulan === bulan) loadAbsensiView();
+        }
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function loadAbsensiBulanList() {
+      const kelas = document.getElementById('viewAbsensiKelas').value;
+      if (!kelas) { document.getElementById('viewAbsensiBulan').innerHTML = '<option value="">Pilih Bulan</option>'; return; }
+      document.getElementById('absensiViewLoading').classList.add('active');
+      const res = await callGAS('getAbsensiBulan', { kelas });
+      document.getElementById('absensiViewLoading').classList.remove('active');
+      if (res.success) {
+        const select = document.getElementById('viewAbsensiBulan');
+        select.innerHTML = '<option value="">Pilih Bulan</option>' + 
+          res.data.map(b => `<option value="${b.nama}">${b.nama}</option>`).join('');
+      }
+    }
+
+    async function loadAbsensiView() {
+      const kelas = document.getElementById('viewAbsensiKelas').value;
+      const bulan = document.getElementById('viewAbsensiBulan').value;
+      if (!kelas || !bulan) return;
+      document.getElementById('absensiViewLoading').classList.add('active');
+      const res = await callGAS('getAbsensiData', { filter: { kelas, bulan } });
+      document.getElementById('absensiViewLoading').classList.remove('active');
+      if (res.success) renderAbsensiTable(res.data, bulan);
+      else showToast('Error memuat data', 'error');
+    }
+
     function renderAbsensiTable(data, bulan) {
       const thead = document.getElementById('absensiTableHead');
       const tbody = document.getElementById('absensiTableBody');
-      
-      if (!data || data.length === 0) {
+      if (!data || !data.length) {
         thead.innerHTML = '';
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="33" style="text-align: center;">
-              <div class="empty-state">
-                <div class="empty-state-text">Belum ada data absensi</div>
-              </div>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML = `<tr><td colspan="33" style="text-align: center;"><div class="empty-state">Belum ada data absensi</div></td></tr>`;
         return;
       }
-      
-      let headerHtml = '<tr><th rowspan="2" style="text-align: left;">Nama Santri</th><th colspan="31" style="text-align: center;">Tanggal</th><th rowspan="2">Keterangan</th></tr>';
-      headerHtml += '<tr>';
-      for (let i = 1; i <= 31; i++) {
-        headerHtml += `<th class="status-cell">${i}</th>`;
-      }
+      let headerHtml = '<tr><th rowspan="2" style="text-align: left;">Nama Santri</th><th colspan="31" style="text-align: center;">Tanggal</th><th rowspan="2">Keterangan</th></tr><tr>';
+      for (let i = 1; i <= 31; i++) headerHtml += `<th class="status-cell">${i}</th>`;
       headerHtml += '<th>&nbsp;</th></tr>';
       thead.innerHTML = headerHtml;
-      
       let bodyHtml = '';
       data.forEach(item => {
-        bodyHtml += '<tr>';
-        bodyHtml += `<th class="nama-cell">${item.namaSantri}</th>`;
-        
+        bodyHtml += '<tr><th class="nama-cell">' + item.namaSantri + '</th>';
         for (let i = 1; i <= 31; i++) {
-          const status = item.tanggal[i] || '';
+          const status = item.tanggal?.[i] || '';
           bodyHtml += `<td class="status-cell" onclick="openEditAbsensiModal('${item.namaSantri}', ${i}, '${status}')" style="cursor: pointer;">`;
-          if (status) {
-            bodyHtml += `<span class="status-badge ${status}">${status}</span>`;
-          } else {
-            bodyHtml += `<span class="status-badge empty">-</span>`;
-          }
+          bodyHtml += status ? `<span class="status-badge ${status}">${status}</span>` : `<span class="status-badge empty">-</span>`;
           bodyHtml += '</td>';
         }
-        
-        bodyHtml += `<td class="keterangan-cell">${item.keterangan || '-'}</td>`;
-        bodyHtml += '</tr>';
+        bodyHtml += `<td class="keterangan-cell">${item.keterangan || '-'}</td></tr>`;
       });
-      
       tbody.innerHTML = bodyHtml;
     }
-    
+
     function openEditAbsensiModal(namaSantri, tanggal, status) {
       document.getElementById('editAbsensiNamaSantri').value = namaSantri;
       document.getElementById('editAbsensiNamaDisplay').value = namaSantri;
-      document.getElementById('editAbsensiKelas').value = document.getElementById('viewAbsensiKelas').value;
-      document.getElementById('editAbsensiBulan').value = document.getElementById('viewAbsensiBulan').value;
+      document.getElementById('editAbsensiKelas').value = document.getElementById('viewAbsensiKelas')?.value || '';
+      document.getElementById('editAbsensiBulan').value = document.getElementById('viewAbsensiBulan')?.value || '';
       document.getElementById('editAbsensiTanggal').value = tanggal;
-      
       const bulan = document.getElementById('editAbsensiBulan').value;
       document.getElementById('editAbsensiTanggalDisplay').value = `${tanggal} ${bulan}`;
-      
       setEditAbsensiStatus(status || 'H');
-      
       document.getElementById('editAbsensiModal').classList.add('active');
     }
-    
+
     function closeEditAbsensiModal() {
       document.getElementById('editAbsensiModal').classList.remove('active');
     }
-    
+
     function setEditAbsensiStatus(status) {
       editAbsensiStatus = status;
-      
-      document.getElementById('editAbsensiBtnH').classList.remove('active');
-      document.getElementById('editAbsensiBtnI').classList.remove('active');
-      document.getElementById('editAbsensiBtnS').classList.remove('active');
-      document.getElementById('editAbsensiBtnA').classList.remove('active');
-      
-      document.getElementById('editAbsensiBtn' + status).classList.add('active');
+      ['H','I','S','A'].forEach(s => {
+        const btn = document.getElementById(`editAbsensiBtn${s}`);
+        if (btn) btn.classList.toggle('active', s === status);
+      });
     }
-    
+
+    async function saveEditAbsensi() {
+      const data = {
+        kelas: document.getElementById('editAbsensiKelas').value,
+        bulan: document.getElementById('editAbsensiBulan').value,
+        tanggal: document.getElementById('editAbsensiTanggal').value,
+        namaSantri: document.getElementById('editAbsensiNamaSantri').value,
+        status: editAbsensiStatus
+      };
+      const res = await callGAS('updateAbsensi', { id: '', data });
+      if (res.success) {
+        closeEditAbsensiModal();
+        showToast(res.message, 'success');
+        loadAbsensiView();
+      } else showToast(res.message, 'error');
+    }
+
+    async function deleteAbsensiCell() {
+      if (!confirm('Yakin ingin menghapus absensi ini?')) return;
+      const data = {
+        kelas: document.getElementById('editAbsensiKelas').value,
+        bulan: document.getElementById('editAbsensiBulan').value,
+        tanggal: document.getElementById('editAbsensiTanggal').value,
+        namaSantri: document.getElementById('editAbsensiNamaSantri').value
+      };
+      const res = await callGAS('deleteAbsensi', { data });
+      if (res.success) {
+        closeEditAbsensiModal();
+        showToast(res.message, 'success');
+        loadAbsensiView();
+      } else showToast(res.message, 'error');
+    }
+
     function printAbsensi() {
-      const kelas = document.getElementById('viewAbsensiKelas').value;
-      const bulan = document.getElementById('viewAbsensiBulan').value;
-      const printContent = document.getElementById('absensiTable').outerHTML;
-      
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Laporan Absensi - ${kelas} ${bulan}</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 8pt; }
-            th, td { border: 1px solid #ddd; padding: 4px; text-align: center; }
-            th { background-color: #059669; color: white; font-size: 9pt; }
-            .nama-cell { text-align: left; font-weight: 600; }
-            .keterangan-cell { text-align: left; font-size: 7pt; white-space: pre-wrap; }
-            h1 { color: #059669; text-align: center; }
-            @media print { body { padding: 0; } }
-          </style>
-        </head>
-        <body>
-          <h1>Laporan Absensi - ${kelas} ${bulan}</h1>
-          ${printContent}
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
+      const kelas = document.getElementById('viewAbsensiKelas')?.value || '';
+      const bulan = document.getElementById('viewAbsensiBulan')?.value || '';
+      const printContent = document.getElementById('absensiTable')?.outerHTML || '';
+      const win = window.open('', '_blank');
+      win.document.write(`<html><head><title>Absensi ${kelas} ${bulan}</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ddd;padding:4px;text-align:center;} th{background:#059669;color:white;} .status-badge{display:inline-block;width:1.75rem;height:1.75rem;line-height:1.75rem;border-radius:0.375rem;}</style></head><body><h1>Absensi ${kelas} ${bulan}</h1>${printContent}</body></html>`);
+      win.document.close();
+      win.print();
     }
-    
-    function getBulanName(bulanNum) {
-      const bulanList = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-      ];
-      return bulanList[bulanNum - 1] || 'Januari';
+
+    // ============================================
+    // PROGRES
+    // ============================================
+    async function handleProgresSubmit(e) {
+      e.preventDefault();
+      const nama = document.getElementById('progresNama').value.trim();
+      const tipe = document.getElementById('progresTipe').value;
+      if (!nama || !tipe) { showAlert('progresAlert', 'Lengkapi field wajib', 'error'); return; }
+      const btn = document.getElementById('progresBtn');
+      btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;"></div>';
+      let data = {
+        namaSantri: nama,
+        tipeHafalan: tipe,
+        keterangan: document.getElementById('progresKeterangan').value.trim(),
+        editor: currentUser?.name || 'Admin'
+      };
+      if (tipe === 'Surat Wajib') {
+        data.surah = document.getElementById('progresSurah').value.trim();
+        data.dariAyat = document.getElementById('progresDariAyat').value;
+        data.sampaiAyat = document.getElementById('progresSampaiAyat').value;
+      } else if (tipe === 'Kitab') {
+        data.surah = document.getElementById('progresNamaKitab').value.trim();
+        data.bait = document.getElementById('progresBait').value;
+      } else if (tipe === 'Lainnya') {
+        data.surah = document.getElementById('progresNamaLainnya').value.trim();
+      } else data.surah = '-';
+      const res = await callGAS('addProgres', { data });
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Progres';
+      if (res.success) {
+        document.getElementById('progresForm').reset();
+        handleProgresTipeChange();
+        showToast(res.message, 'success');
+        loadProgresData();
+      } else showToast(res.message, 'error');
     }
-    
+
     function handleProgresTipeChange() {
       const tipe = document.getElementById('progresTipe').value;
-      
-      document.getElementById('suratWajibFields').style.display = 'none';
-      document.getElementById('kitabFields').style.display = 'none';
-      document.getElementById('lainnyaFields').style.display = 'none';
-      
-      if (tipe === 'Surat Wajib') {
-        document.getElementById('suratWajibFields').style.display = 'block';
-      } else if (tipe === 'Kitab') {
-        document.getElementById('kitabFields').style.display = 'block';
-      } else if (tipe === 'Lainnya') {
-        document.getElementById('lainnyaFields').style.display = 'block';
-      }
+      document.getElementById('suratWajibFields').style.display = tipe === 'Surat Wajib' ? 'block' : 'none';
+      document.getElementById('kitabFields').style.display = tipe === 'Kitab' ? 'block' : 'none';
+      document.getElementById('lainnyaFields').style.display = tipe === 'Lainnya' ? 'block' : 'none';
     }
-    
+
+    async function loadProgresData() {
+      document.getElementById('progresLoading').classList.add('active');
+      const res = await callGAS('getProgresData', { filter: {} });
+      document.getElementById('progresLoading').classList.remove('active');
+      if (res.success) {
+        progresData = res.data;
+        renderProgresTable(res.data);
+      } else showToast('Error memuat progres', 'error');
+    }
+
     function renderProgresTable(data) {
       const tbody = document.getElementById('progresTableBody');
-      
-      if (!data || data.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7" style="text-align: center;">
-              <div class="empty-state">
-                <div class="empty-state-text">Belum ada data progres</div>
-              </div>
-            </td>
-          </tr>
-        `;
+      if (!data || !data.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;"><div class="empty-state">Belum ada data progres</div></td></tr>`;
         return;
       }
-      
       tbody.innerHTML = data.map(item => {
         const date = new Date(item.tanggal).toLocaleDateString('id-ID');
         let detail = '';
-        
-        if (item.tipeHafalan === 'Surat Wajib') {
-          detail = `${item.surah} (${item.dariAyat || 0} - ${item.sampaiAyat || 0})`;
-        } else if (item.tipeHafalan === 'Kitab') {
-          detail = `${item.surah} (${item.bait || 0} bait)`;
-        } else {
-          detail = item.surah || '-';
-        }
-        
-        return `
-          <tr>
-            <td>${date}</td>
-            <td><strong>${item.namaSantri}</strong></td>
-            <td><span class="badge badge-info">${item.tipeHafalan}</span></td>
-            <td>${detail}</td>
-            <td>${item.editor}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="action-btn edit" onclick="openEditProgresModal('${item.id}')" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn delete" onclick="deleteProgres('${item.id}')" title="Hapus">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
+        if (item.tipeHafalan === 'Surat Wajib') detail = `${item.surah} (${item.dariAyat || 0}-${item.sampaiAyat || 0})`;
+        else if (item.tipeHafalan === 'Kitab') detail = `${item.surah} (${item.bait || 0} bait)`;
+        else detail = item.surah || '-';
+        return `<tr>
+          <td>${date}</td>
+          <td><strong>${item.namaSantri}</strong></td>
+          <td><span class="badge badge-info">${item.tipeHafalan}</span></td>
+          <td>${detail}</td>
+          <td>${item.editor}</td>
+          <td><div class="action-buttons">
+            <button class="action-btn edit" onclick="openEditProgresModal('${item.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deleteProgres('${item.id}')"><i class="fas fa-trash"></i></button>
+          </div></td>
+        </tr>`;
       }).join('');
     }
-    
+
     function filterProgres() {
       const keyword = document.getElementById('searchProgres').value.toLowerCase();
       const filtered = progresData.filter(item => 
@@ -1114,18 +1697,15 @@
       );
       renderProgresTable(filtered);
     }
-    
+
     function openEditProgresModal(id) {
       const item = progresData.find(p => p.id === id);
       if (!item) return;
-      
       document.getElementById('editProgresId').value = id;
       document.getElementById('editProgresNama').value = item.namaSantri;
       document.getElementById('editProgresTipe').value = item.tipeHafalan;
       document.getElementById('editProgresKeterangan').value = item.keterangan || '';
-      
       handleEditProgresTipeChange();
-      
       if (item.tipeHafalan === 'Surat Wajib') {
         document.getElementById('editProgresSurah').value = item.surah || '';
         document.getElementById('editProgresDariAyat').value = item.dariAyat || '';
@@ -1136,97 +1716,123 @@
       } else {
         document.getElementById('editProgresNamaLainnya').value = item.surah || '';
       }
-      
       document.getElementById('editProgresModal').classList.add('active');
     }
-    
+
     function closeEditProgresModal() {
       document.getElementById('editProgresModal').classList.remove('active');
     }
-    
+
     function handleEditProgresTipeChange() {
       const tipe = document.getElementById('editProgresTipe').value;
-      
-      document.getElementById('editSuratWajibFields').style.display = 'none';
-      document.getElementById('editKitabFields').style.display = 'none';
-      document.getElementById('editLainnyaFields').style.display = 'none';
-      
+      document.getElementById('editSuratWajibFields').style.display = tipe === 'Surat Wajib' ? 'block' : 'none';
+      document.getElementById('editKitabFields').style.display = tipe === 'Kitab' ? 'block' : 'none';
+      document.getElementById('editLainnyaFields').style.display = tipe === 'Lainnya' ? 'block' : 'none';
+    }
+
+    async function saveEditProgres() {
+      const id = document.getElementById('editProgresId').value;
+      const nama = document.getElementById('editProgresNama').value.trim();
+      const tipe = document.getElementById('editProgresTipe').value;
+      if (!nama || !tipe) { showToast('Lengkapi field wajib', 'error'); return; }
+      let data = {
+        namaSantri: nama,
+        tipeHafalan: tipe,
+        keterangan: document.getElementById('editProgresKeterangan').value.trim(),
+        editor: currentUser?.name || 'Admin'
+      };
       if (tipe === 'Surat Wajib') {
-        document.getElementById('editSuratWajibFields').style.display = 'block';
+        data.surah = document.getElementById('editProgresSurah').value.trim();
+        data.dariAyat = document.getElementById('editProgresDariAyat').value;
+        data.sampaiAyat = document.getElementById('editProgresSampaiAyat').value;
       } else if (tipe === 'Kitab') {
-        document.getElementById('editKitabFields').style.display = 'block';
+        data.surah = document.getElementById('editProgresNamaKitab').value.trim();
+        data.bait = document.getElementById('editProgresBait').value;
       } else if (tipe === 'Lainnya') {
-        document.getElementById('editLainnyaFields').style.display = 'block';
+        data.surah = document.getElementById('editProgresNamaLainnya').value.trim();
       }
+      const res = await callGAS('updateProgres', { id, data });
+      if (res.success) {
+        closeEditProgresModal();
+        showToast(res.message, 'success');
+        loadProgresData();
+      } else showToast(res.message, 'error');
     }
-    
+
+    async function deleteProgres(id) {
+      if (!confirm('Yakin hapus data ini?')) return;
+      const res = await callGAS('deleteProgres', { id });
+      if (res.success) {
+        showToast(res.message, 'success');
+        loadProgresData();
+      } else showToast(res.message, 'error');
+    }
+
     function printProgres() {
-      const printContent = document.getElementById('progresTable').outerHTML;
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Laporan Progres Hafalan</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #4CAF50; color: white; }
-            h1 { color: #4CAF50; }
-          </style>
-        </head>
-        <body>
-          <h1>Laporan Progres Hafalan</h1>
-          ${printContent}
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
+      const printContent = document.getElementById('progresTable')?.outerHTML || '';
+      const win = window.open('', '_blank');
+      win.document.write(`<html><head><title>Laporan Progres</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background:#059669;color:white;}</style></head><body><h1>Laporan Progres Hafalan</h1>${printContent}</body></html>`);
+      win.document.close();
+      win.print();
     }
-    
+
+    // ============================================
+    // PELANGGARAN
+    // ============================================
+    async function handlePelanggaranSubmit(e) {
+      e.preventDefault();
+      const nama = document.getElementById('pelanggaranNama').value.trim();
+      const jenis = document.getElementById('pelanggaranJenis').value.trim();
+      if (!nama || !jenis) { showAlert('pelanggaranAlert', 'Lengkapi field wajib', 'error'); return; }
+      const btn = document.getElementById('pelanggaranBtn');
+      btn.disabled = true; btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;"></div>';
+      const data = {
+        namaSantri: nama,
+        pelanggaran: jenis,
+        keterangan: document.getElementById('pelanggaranKeterangan').value.trim(),
+        editor: currentUser?.name || 'Admin'
+      };
+      const res = await callGAS('addPelanggaran', { data });
+      btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Simpan Pelanggaran';
+      if (res.success) {
+        document.getElementById('pelanggaranForm').reset();
+        showToast(res.message, 'success');
+        loadPelanggaranData();
+      } else showToast(res.message, 'error');
+    }
+
+    async function loadPelanggaranData() {
+      document.getElementById('pelanggaranLoading').classList.add('active');
+      const res = await callGAS('getPelanggaranData', { filter: {} });
+      document.getElementById('pelanggaranLoading').classList.remove('active');
+      if (res.success) {
+        pelanggaranData = res.data;
+        renderPelanggaranTable(res.data);
+      } else showToast('Error memuat pelanggaran', 'error');
+    }
+
     function renderPelanggaranTable(data) {
       const tbody = document.getElementById('pelanggaranTableBody');
-      
-      if (!data || data.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" style="text-align: center;">
-              <div class="empty-state">
-                <div class="empty-state-text">Belum ada data pelanggaran</div>
-              </div>
-            </td>
-          </tr>
-        `;
+      if (!data || !data.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;"><div class="empty-state">Belum ada data pelanggaran</div></td></tr>`;
         return;
       }
-      
       tbody.innerHTML = data.map(item => {
         const date = new Date(item.tanggal).toLocaleDateString('id-ID');
-        
-        return `
-          <tr>
-            <td>${date}</td>
-            <td><strong>${item.namaSantri}</strong></td>
-            <td><span class="badge badge-danger">${item.pelanggaran}</span></td>
-            <td>${item.keterangan || '-'}</td>
-            <td>${item.editor}</td>
-            <td>
-              <div class="action-buttons">
-                <button class="action-btn edit" onclick="openEditPelanggaranModal('${item.id}')" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn delete" onclick="deletePelanggaran('${item.id}')" title="Hapus">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-        `;
+        return `<tr>
+          <td>${date}</td>
+          <td><strong>${item.namaSantri}</strong></td>
+          <td><span class="badge badge-danger">${item.pelanggaran}</span></td>
+          <td>${item.keterangan || '-'}</td>
+          <td>${item.editor}</td>
+          <td><div class="action-buttons">
+            <button class="action-btn edit" onclick="openEditPelanggaranModal('${item.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deletePelanggaran('${item.id}')"><i class="fas fa-trash"></i></button>
+          </div></td>
+        </tr>`;
       }).join('');
     }
-    
+
     function filterPelanggaran() {
       const keyword = document.getElementById('searchPelanggaran').value.toLowerCase();
       const filtered = pelanggaranData.filter(item => 
@@ -1235,72 +1841,172 @@
       );
       renderPelanggaranTable(filtered);
     }
-    
+
     function openEditPelanggaranModal(id) {
       const item = pelanggaranData.find(p => p.id === id);
       if (!item) return;
-      
       document.getElementById('editPelanggaranId').value = id;
       document.getElementById('editPelanggaranNama').value = item.namaSantri;
       document.getElementById('editPelanggaranJenis').value = item.pelanggaran;
       document.getElementById('editPelanggaranKeterangan').value = item.keterangan || '';
-      
       document.getElementById('editPelanggaranModal').classList.add('active');
     }
-    
+
     function closeEditPelanggaranModal() {
       document.getElementById('editPelanggaranModal').classList.remove('active');
     }
-    
-    function printPelanggaran() {
-      const printContent = document.getElementById('pelanggaranTable').outerHTML;
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Laporan Pelanggaran</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f44336; color: white; }
-            h1 { color: #f44336; }
-          </style>
-        </head>
-        <body>
-          <h1>Laporan Pelanggaran</h1>
-          ${printContent}
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
+
+    async function saveEditPelanggaran() {
+      const id = document.getElementById('editPelanggaranId').value;
+      const nama = document.getElementById('editPelanggaranNama').value.trim();
+      const jenis = document.getElementById('editPelanggaranJenis').value.trim();
+      if (!nama || !jenis) { showToast('Lengkapi field wajib', 'error'); return; }
+      const data = {
+        namaSantri: nama,
+        pelanggaran: jenis,
+        keterangan: document.getElementById('editPelanggaranKeterangan').value.trim(),
+        editor: currentUser?.name || 'Admin'
+      };
+      const res = await callGAS('updatePelanggaran', { id, data });
+      if (res.success) {
+        closeEditPelanggaranModal();
+        showToast(res.message, 'success');
+        loadPelanggaranData();
+      } else showToast(res.message, 'error');
     }
-    
+
+    async function deletePelanggaran(id) {
+      if (!confirm('Yakin hapus data ini?')) return;
+      const res = await callGAS('deletePelanggaran', { id });
+      if (res.success) {
+        showToast(res.message, 'success');
+        loadPelanggaranData();
+      } else showToast(res.message, 'error');
+    }
+
+    function printPelanggaran() {
+      const printContent = document.getElementById('pelanggaranTable')?.outerHTML || '';
+      const win = window.open('', '_blank');
+      win.document.write(`<html><head><title>Laporan Pelanggaran</title><style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background:#dc2626;color:white;}</style></head><body><h1>Laporan Pelanggaran</h1>${printContent}</body></html>`);
+      win.document.close();
+      win.print();
+    }
+
+    // ============================================
+    // UTILITY
+    // ============================================
+    function setupEventListeners() {
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) loginForm.addEventListener('submit', handleLogin);
+      const progresForm = document.getElementById('progresForm');
+      if (progresForm) progresForm.addEventListener('submit', handleProgresSubmit);
+      const pelanggaranForm = document.getElementById('pelanggaranForm');
+      if (pelanggaranForm) pelanggaranForm.addEventListener('submit', handlePelanggaranSubmit);
+      
+      setupAutocomplete('progresNama', 'progresNamaSuggestions');
+      setupAutocomplete('pelanggaranNama', 'pelanggaranNamaSuggestions');
+      setupAutocomplete('editProgresNama', 'editProgresNamaSuggestions');
+      setupAutocomplete('editPelanggaranNama', 'editPelanggaranNamaSuggestions');
+      
+      const absensiTanggal = document.getElementById('absensiTanggal');
+      if (absensiTanggal) absensiTanggal.valueAsDate = new Date();
+    }
+
+    function setupAutocomplete(inputId, suggestionsId) {
+      const input = document.getElementById(inputId);
+      const suggestions = document.getElementById(suggestionsId);
+      if (!input || !suggestions) return;
+      let selectedIndex = -1;
+      input.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value.length < 2) { suggestions.classList.remove('active'); return; }
+        const matches = santriData.filter(s => s.nama.toLowerCase().includes(value.toLowerCase()));
+        if (!matches.length) { suggestions.classList.remove('active'); return; }
+        suggestions.innerHTML = matches.map(s => `<div class="autocomplete-item" data-nama="${s.nama}">${s.nama}</div>`).join('');
+        suggestions.classList.add('active');
+        selectedIndex = -1;
+      });
+      input.addEventListener('keydown', function(e) {
+        const items = suggestions.querySelectorAll('.autocomplete-item');
+        if (e.key === 'ArrowDown') { e.preventDefault(); selectedIndex = Math.min(selectedIndex + 1, items.length - 1); updateSelection(items); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); selectedIndex = Math.max(selectedIndex - 1, 0); updateSelection(items); }
+        else if (e.key === 'Enter' && selectedIndex >= 0) { e.preventDefault(); items[selectedIndex].click(); }
+        else if (e.key === 'Escape') suggestions.classList.remove('active');
+      });
+      suggestions.addEventListener('click', function(e) {
+        const item = e.target.closest('.autocomplete-item');
+        if (item) {
+          input.value = item.dataset.nama;
+          suggestions.classList.remove('active');
+        }
+      });
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.autocomplete-wrapper')) suggestions.classList.remove('active');
+      });
+      function updateSelection(items) {
+        items.forEach((item, idx) => item.classList.toggle('selected', idx === selectedIndex));
+      }
+    }
+
+    function updateTodayDate() {
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const el = document.getElementById('todayDate');
+      if (el) el.textContent = today.toLocaleDateString('id-ID', options);
+    }
+
+    function getBulanName(bulanNum) {
+      const bulanList = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      return bulanList[bulanNum - 1] || 'Januari';
+    }
+
     function showAlert(elementId, message, type) {
       const alert = document.getElementById(elementId);
       if (alert) {
         alert.className = `alert alert-${type} active`;
         alert.textContent = message;
-        
-        setTimeout(() => {
-          alert.classList.remove('active');
-        }, 5000);
+        setTimeout(() => alert.classList.remove('active'), 5000);
       }
     }
-    
+
     function showToast(message, type = 'info') {
       const toast = document.getElementById('toast');
       if (toast) {
         toast.className = `toast toast-${type} active`;
-        toast.textContent = message;
-        
-        setTimeout(() => {
-          toast.classList.remove('active');
-        }, 3000);
+        toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+        setTimeout(() => toast.classList.remove('active'), 3000);
       }
     }
+
+    // Ekspos fungsi global yang dibutuhkan inline
+    window.logout = logout;
+    window.showPage = showPage;
+    window.setAttendanceStatus = setAttendanceStatus;
+    window.loadSantriByKelas = loadSantriByKelas;
+    window.checkAbsensiExists = checkAbsensiExists;
+    window.saveAbsensi = saveAbsensi;
+    window.loadAbsensiBulanList = loadAbsensiBulanList;
+    window.loadAbsensiView = loadAbsensiView;
+    window.printAbsensi = printAbsensi;
+    window.openEditAbsensiModal = openEditAbsensiModal;
+    window.closeEditAbsensiModal = closeEditAbsensiModal;
+    window.setEditAbsensiStatus = setEditAbsensiStatus;
+    window.saveEditAbsensi = saveEditAbsensi;
+    window.deleteAbsensiCell = deleteAbsensiCell;
+    window.handleProgresTipeChange = handleProgresTipeChange;
+    window.filterProgres = filterProgres;
+    window.openEditProgresModal = openEditProgresModal;
+    window.closeEditProgresModal = closeEditProgresModal;
+    window.handleEditProgresTipeChange = handleEditProgresTipeChange;
+    window.saveEditProgres = saveEditProgres;
+    window.deleteProgres = deleteProgres;
+    window.printProgres = printProgres;
+    window.filterPelanggaran = filterPelanggaran;
+    window.openEditPelanggaranModal = openEditPelanggaranModal;
+    window.closeEditPelanggaranModal = closeEditPelanggaranModal;
+    window.saveEditPelanggaran = saveEditPelanggaran;
+    window.deletePelanggaran = deletePelanggaran;
+    window.printPelanggaran = printPelanggaran;
   </script>
 </body>
 </html>
