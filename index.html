@@ -505,6 +505,163 @@
     #loginPage {
       display: none;
     }
+
+        /* ==========================================
+       STYLE TAMBAHAN UNTUK FORM & KOMPONEN
+       (Wajib ditambahkan agar UI tidak berantakan)
+       ========================================== */
+
+    /* Form Group & Label */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* Input, Select, Textarea */
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: var(--surface);
+      transition: all 0.2s;
+      color: var(--text);
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: var(--background);
+      border-color: var(--text-secondary);
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+
+    /* Alert Messages */
+    .alert {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid transparent;
+      display: none;
+    }
+
+    .alert.active {
+      display: block;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #ef4444;
+    }
+
+    .alert-warning {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #f59e0b;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #065f46;
+      border-color: #10b981;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #333;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideIn 0.3s ease;
+      max-width: 350px;
+    }
+
+    .toast.active {
+      display: flex;
+    }
+
+    .toast-error {
+      background: var(--danger);
+    }
+
+    .toast-success {
+      background: var(--success);
+    }
+
+    .toast-info {
+      background: var(--info);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -1011,14 +1168,25 @@
     <span id="toastMessage"></span>
   </div>
 
-  <script>
+    <script>
     // ============================================
     // KONFIGURASI URL GOOGLE APPS SCRIPT
     // ============================================
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyF3shWdyC9dlYgK3V6zzKOpu-WF1BMvra87H7PeySJ6-bKh_G3erp_lvEjCaDy2tDTMw/exec';
+    // Pastikan URL ini adalah URL "Web App" dari Deploy GAS Anda
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxeTGbBEA7K_Tb7nlZgoMlQxJ8_wfT08fhryG8CBR8zauV7PA6jnsEDgacc0W92zTPAIg/exec';
 
     // ============================================
-    // FUNGSI API UTAMA (DENGAN ERROR HANDLING)
+    // VARIABEL GLOBAL
+    // ============================================
+    let currentUser = { name: 'Administrator', success: true }; // Mode publik/tanpa login
+    let santriData = [];
+    let kelasData = [];
+    let progresData = [];
+    let pelanggaranData = [];
+    let editAbsensiStatus = 'H';
+
+    // ============================================
+    // FUNGSI API UTAMA (FETCH)
     // ============================================
     async function callGAS(action, params = {}) {
       try {
@@ -1028,95 +1196,84 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action, ...params })
         });
+        
         if (!response.ok) throw new Error('Network response was not ok');
         return await response.json();
       } catch (error) {
         console.error('API Error:', error);
-        // Mengembalikan struktur sukses: false dengan data dummy agar UI tetap jalan
-        return { 
-          success: false, 
-          message: 'Mode offline: tidak dapat terhubung ke server',
-          data: action === 'getKelasData' ? [] : 
-                action === 'getSantriData' ? [] :
-                action === 'getDashboardStats' ? { totalSantri: 0, totalProgres: 0, totalAbsensi: 0, totalPelanggaran: 0, absensiHariIni: [], recentActivities: [] } :
-                action === 'getSantriByKelas' ? { data: [] } :
-                action === 'getAbsensiBulan' ? { data: [] } :
-                action === 'getAbsensiData' ? { data: [] } :
-                action === 'getProgresData' ? { data: [] } :
-                action === 'getPelanggaranData' ? { data: [] } :
-                action === 'checkAbsensiExists' ? { data: { exists: false } } :
-                { success: false }
-        };
+        showToast('Gagal terhubung ke server', 'error');
+        return { success: false, message: error.message, data: null };
       }
     }
 
     // ============================================
-    // GLOBAL VARIABLES
-    // ============================================
-    let currentUser = { name: 'Administrator', success: true };
-    let santriData = [];
-    let kelasData = [];
-    let progresData = [];
-    let absensiData = [];
-    let pelanggaranData = [];
-    let editAbsensiStatus = 'H';
-    let absensiHariIniData = [];
-
-    // ============================================
-    // INISIALISASI - TANPA LOGIN
+    // INISIALISASI SAAT HALAMAN DIMUAT
     // ============================================
     document.addEventListener('DOMContentLoaded', function() {
-      // Set user langsung
+      // Setup User
       document.getElementById('userName').textContent = currentUser.name;
       document.querySelector('.user-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
       
-      // Sembunyikan tombol logout (karena tidak ada sesi)
-      const logoutBtn = document.querySelector('.btn-logout');
-      if (logoutBtn) logoutBtn.style.display = 'none';
-      
-      // Setup listeners dan load data awal
+      // Setup Event Listeners dasar
       setupEventListeners();
       updateTodayDate();
       
-      // Muat data dari server (jika online)
+      // Load Data Awal
       loadKelas();
       loadSantriData();
       loadDashboard();
     });
 
-    // ============================================
-    // FUNGSI NAVIGASI (tanpa login)
-    // ============================================
-    function logout() {
-      // Non-fungsional karena tanpa login
-      showToast('Mode offline, logout tidak diperlukan', 'info');
+    function setupEventListeners() {
+      // Form Submits
+      document.getElementById('progresForm').addEventListener('submit', handleProgresSubmit);
+      document.getElementById('pelanggaranForm').addEventListener('submit', handlePelanggaranSubmit);
+      
+      // Autocomplete Setup
+      setupAutocomplete('progresNama', 'progresNamaSuggestions');
+      setupAutocomplete('pelanggaranNama', 'pelanggaranNamaSuggestions');
+      setupAutocomplete('editProgresNama', 'editProgresNamaSuggestions');
+      setupAutocomplete('editPelanggaranNama', 'editPelanggaranNamaSuggestions');
+      
+      // Set Default Date
+      const today = new Date().toISOString().split('T')[0];
+      if(document.getElementById('absensiTanggal')) {
+        document.getElementById('absensiTanggal').value = today;
+      }
     }
 
+    // ============================================
+    // NAVIGASI HALAMAN
+    // ============================================
     function showPage(page, event = null) {
       // Sembunyikan semua halaman
       document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      // Nonaktifkan semua tab
+      
+      // Nonaktifkan tab
       document.querySelectorAll('.nav-tabs .nav-tab').forEach(t => t.classList.remove('active'));
 
+      // Tentukan ID halaman
       let pageId = page + 'Page';
       if (page === 'dataAbsensi') pageId = 'dataAbsensiPage';
+
+      // Tampilkan halaman
       const targetPage = document.getElementById(pageId);
       if (targetPage) targetPage.style.display = 'block';
 
-      // Aktifkan tab yang sesuai
+      // Aktifkan tab
       if (event?.target) {
         const tab = event.target.closest('.nav-tab');
         if (tab) tab.classList.add('active');
       } else {
-        const tabs = document.querySelectorAll('.nav-tab');
-        tabs.forEach(tab => {
+        // Fallback pencarian tab
+        document.querySelectorAll('.nav-tab').forEach(tab => {
           if (tab.textContent.toLowerCase().includes(page.replace('data', '').toLowerCase())) {
             tab.classList.add('active');
           }
         });
       }
 
-      // Muat data sesuai halaman
+      // Load data spesifik halaman
       if (page === 'dashboard') loadDashboard();
       else if (page === 'absensi') loadAbsensiKelasForInput();
       else if (page === 'dataAbsensi') loadAbsensiKelasForData();
@@ -1124,68 +1281,63 @@
       else if (page === 'pelanggaran') loadPelanggaranData();
     }
 
+    function logout() {
+      showToast('Mode Demo, Logout tidak tersedia', 'info');
+    }
+
     // ============================================
-    // DASHBOARD
+    // DATA DASHBOARD
     // ============================================
     async function loadDashboard() {
       const response = await callGAS('getDashboardStats');
-      if (response.success) {
+      if (response.success && response.data) {
         const stats = response.data;
         document.getElementById('statSantri').textContent = stats.totalSantri || 0;
         document.getElementById('statProgres').textContent = stats.totalProgres || 0;
         document.getElementById('statAbsensi').textContent = stats.totalAbsensi || 0;
         document.getElementById('statPelanggaran').textContent = stats.totalPelanggaran || 0;
+        
         renderAbsensiHariIni(stats.absensiHariIni || []);
         renderRecentActivities(stats.recentActivities || []);
-      } else {
-        // Tampilkan data kosong
-        document.getElementById('statSantri').textContent = '0';
-        document.getElementById('statProgres').textContent = '0';
-        document.getElementById('statAbsensi').textContent = '0';
-        document.getElementById('statPelanggaran').textContent = '0';
-        renderAbsensiHariIni([]);
-        renderRecentActivities([]);
-        if (response.message) showToast(response.message, 'info');
       }
     }
 
     function renderAbsensiHariIni(data) {
-      // ... sama seperti kode sebelumnya ...
       const tbody = document.getElementById('absensiHariIniBody');
       if (!data || data.length === 0) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;"><div class="empty-state"><i class="fas fa-check-circle"></i><div>Semua santri hadir hari ini</div></div></td></tr>`;
-      } else {
-        tbody.innerHTML = data.map(item => {
-          let badgeClass = 'badge-success', label = 'Hadir';
-          if (item.status === 'I') { badgeClass = 'badge-info'; label = 'Izin'; }
-          else if (item.status === 'S') { badgeClass = 'badge-warning'; label = 'Sakit'; }
-          else if (item.status === 'A') { badgeClass = 'badge-danger'; label = 'Alpa'; }
-          return `<tr><td><strong>${item.namaSantri}</strong></td><td>${item.kelas}</td><td><span class="badge ${badgeClass}">${label}</span></td><td>${item.keterangan || '-'}</td></tr>`;
-        }).join('');
+        return;
       }
+      tbody.innerHTML = data.map(item => {
+        let badgeClass = 'badge-success', label = 'Hadir';
+        if (item.status === 'I') { badgeClass = 'badge-info'; label = 'Izin'; }
+        else if (item.status === 'S') { badgeClass = 'badge-warning'; label = 'Sakit'; }
+        else if (item.status === 'A') { badgeClass = 'badge-danger'; label = 'Alpa'; }
+        return `<tr><td><strong>${item.namaSantri}</strong></td><td>${item.kelas}</td><td><span class="badge ${badgeClass}">${label}</span></td><td>${item.keterangan || '-'}</td></tr>`;
+      }).join('');
     }
 
     function renderRecentActivities(activities) {
       const container = document.getElementById('recentActivities');
       if (!activities || activities.length === 0) {
         container.innerHTML = `<div class="empty-state"><i class="fas fa-history"></i><div>Belum ada aktivitas</div></div>`;
-      } else {
-        let html = '<div class="table-responsive"><table class="data-table"><tbody>';
-        activities.forEach(act => {
-          const date = new Date(act.tanggal).toLocaleDateString('id-ID');
-          let badge = '', label = '', detail = '';
-          if (act.type === 'absensi') { badge = 'badge-info'; label = 'Absensi'; detail = act.kelas; }
-          else if (act.type === 'progres') { badge = 'badge-success'; label = 'Progres'; detail = act.tipeHafalan; }
-          else { badge = 'badge-danger'; label = 'Pelanggaran'; detail = act.pelanggaran; }
-          html += `<tr><td><span class="badge ${badge}">${label}</span></td><td><strong>${act.namaSantri}</strong></td><td>${detail}</td><td><small>${date}</small></td></tr>`;
-        });
-        html += '</tbody></table></div>';
-        container.innerHTML = html;
+        return;
       }
+      let html = '<div class="table-responsive"><table class="data-table"><tbody>';
+      activities.forEach(act => {
+        const date = new Date(act.tanggal).toLocaleDateString('id-ID');
+        let badge = '', label = '', detail = '';
+        if (act.type === 'absensi') { badge = 'badge-info'; label = 'Absensi'; detail = act.kelas; }
+        else if (act.type === 'progres') { badge = 'badge-success'; label = 'Progres'; detail = act.tipeHafalan; }
+        else { badge = 'badge-danger'; label = 'Pelanggaran'; detail = act.pelanggaran; }
+        html += `<tr><td><span class="badge ${badge}">${label}</span></td><td><strong>${act.namaSantri}</strong></td><td>${detail}</td><td><small>${date}</small></td></tr>`;
+      });
+      html += '</tbody></table></div>';
+      container.innerHTML = html;
     }
 
     // ============================================
-    // KELAS & SANTRI
+    // DATA KELAS & SANTRI
     // ============================================
     async function loadKelas() {
       const res = await callGAS('getKelasData');
@@ -1201,10 +1353,7 @@
       const res = await callGAS('getKelasData');
       const select = document.getElementById('absensiKelas');
       if (res.success && res.data) {
-        select.innerHTML = '<option value="">Pilih kelas</option>' + 
-          res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
-      } else {
-        select.innerHTML = '<option value="">Pilih kelas</option><option value="Kelas A">Kelas A (demo)</option><option value="Kelas B">Kelas B (demo)</option>';
+        select.innerHTML = '<option value="">Pilih kelas</option>' + res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
       }
     }
 
@@ -1212,19 +1361,17 @@
       const res = await callGAS('getKelasData');
       const select = document.getElementById('viewAbsensiKelas');
       if (res.success && res.data) {
-        select.innerHTML = '<option value="">Pilih Kelas</option>' + 
-          res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
-      } else {
-        select.innerHTML = '<option value="">Pilih Kelas</option><option value="Kelas A">Kelas A (demo)</option><option value="Kelas B">Kelas B (demo)</option>';
+        select.innerHTML = '<option value="">Pilih Kelas</option>' + res.data.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
       }
     }
 
     // ============================================
-    // ABSENSI
+    // FITUR ABSENSI (INPUT)
     // ============================================
     async function loadSantriByKelas() {
       const kelas = document.getElementById('absensiKelas').value;
       if (!kelas) { document.getElementById('absensiSantriList').style.display = 'none'; return; }
+      
       const res = await callGAS('getSantriByKelas', { kelas });
       const container = document.getElementById('absensiSantriItems');
       document.getElementById('absensiKelasLabel').textContent = kelas;
@@ -1248,93 +1395,474 @@
         `).join('');
         document.getElementById('absensiSantriList').style.display = 'block';
       } else {
-        // Data dummy untuk demo
-        container.innerHTML = `
-          <div style="background: var(--background); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-              <strong>Ahmad Fauzi</strong>
-              <div class="attendance-buttons">
-                <button type="button" class="attendance-btn H active" data-nama="Ahmad Fauzi" data-status="H" onclick="setAttendanceStatus(this)">H</button>
-                <button type="button" class="attendance-btn I" data-nama="Ahmad Fauzi" data-status="I" onclick="setAttendanceStatus(this)">I</button>
-                <button type="button" class="attendance-btn S" data-nama="Ahmad Fauzi" data-status="S" onclick="setAttendanceStatus(this)">S</button>
-                <button type="button" class="attendance-btn A" data-nama="Ahmad Fauzi" data-status="A" onclick="setAttendanceStatus(this)">A</button>
-              </div>
-            </div>
-            <div style="margin-top: 0.5rem;">
-              <input type="text" class="form-input" placeholder="Keterangan..." style="font-size: 0.875rem;">
-            </div>
-          </div>
-          <div style="background: var(--background); padding: 1rem; border-radius: 0.75rem; margin-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-              <strong>Budi Santoso</strong>
-              <div class="attendance-buttons">
-                <button type="button" class="attendance-btn H active" data-nama="Budi Santoso" data-status="H" onclick="setAttendanceStatus(this)">H</button>
-                <button type="button" class="attendance-btn I" data-nama="Budi Santoso" data-status="I" onclick="setAttendanceStatus(this)">I</button>
-                <button type="button" class="attendance-btn S" data-nama="Budi Santoso" data-status="S" onclick="setAttendanceStatus(this)">S</button>
-                <button type="button" class="attendance-btn A" data-nama="Budi Santoso" data-status="A" onclick="setAttendanceStatus(this)">A</button>
-              </div>
-            </div>
-            <div style="margin-top: 0.5rem;">
-              <input type="text" class="form-input" placeholder="Keterangan..." style="font-size: 0.875rem;">
-            </div>
-          </div>
-        `;
+        container.innerHTML = '<div class="empty-state">Tidak ada data santri</div>';
         document.getElementById('absensiSantriList').style.display = 'block';
-        showToast('Mode demo: menampilkan data contoh', 'info');
       }
     }
 
-    // ========== Fungsi-fungsi lainnya (salin dari kode sebelumnya, dipersingkat untuk jawaban) ==========
-    // ... (semua fungsi absensi, progres, pelanggaran tetap sama seperti kode sebelumnya,
-    //      namun dengan tambahan pengecekan dan data dummy jika fetch gagal. 
-    //      Demi keringkasan, saya tidak menulis ulang semuanya di sini, 
-    //      tetapi dalam implementasi sebaiknya disalin lengkap dari kode sebelumnya.
-    //      Untuk keperluan demo, fungsi-fungsi tersebut sudah ada di jawaban sebelumnya,
-    //      dan dapat langsung digunakan.)
-    
-    // Saya sertakan fungsi-fungsi penting yang diperlukan agar tidak error:
-    function setAttendanceStatus(btn) { /* ... */ }
-    async function checkAbsensiExists() { /* ... */ }
-    async function saveAbsensi() { /* ... */ }
-    async function loadAbsensiBulanList() { /* ... */ }
-    async function loadAbsensiView() { /* ... */ }
-    function renderAbsensiTable(data, bulan) { /* ... */ }
-    function openEditAbsensiModal(namaSantri, tanggal, status) { /* ... */ }
-    function closeEditAbsensiModal() { /* ... */ }
-    function setEditAbsensiStatus(status) { /* ... */ }
-    async function saveEditAbsensi() { /* ... */ }
-    async function deleteAbsensiCell() { /* ... */ }
-    function printAbsensi() { /* ... */ }
-    function handleProgresTipeChange() { /* ... */ }
-    async function handleProgresSubmit(e) { /* ... */ }
-    async function loadProgresData() { /* ... */ }
-    function renderProgresTable(data) { /* ... */ }
-    function filterProgres() { /* ... */ }
-    function openEditProgresModal(id) { /* ... */ }
-    function closeEditProgresModal() { /* ... */ }
-    function handleEditProgresTipeChange() { /* ... */ }
-    async function saveEditProgres() { /* ... */ }
-    async function deleteProgres(id) { /* ... */ }
-    function printProgres() { /* ... */ }
-    async function handlePelanggaranSubmit(e) { /* ... */ }
-    async function loadPelanggaranData() { /* ... */ }
-    function renderPelanggaranTable(data) { /* ... */ }
-    function filterPelanggaran() { /* ... */ }
-    function openEditPelanggaranModal(id) { /* ... */ }
-    function closeEditPelanggaranModal() { /* ... */ }
-    async function saveEditPelanggaran() { /* ... */ }
-    async function deletePelanggaran(id) { /* ... */ }
-    function printPelanggaran() { /* ... */ }
-    function setupEventListeners() { /* ... */ }
-    function setupAutocomplete(inputId, suggestionsId) { /* ... */ }
-    function updateTodayDate() { /* ... */ }
-    function getBulanName(bulanNum) { /* ... */ }
-    function showAlert(elementId, message, type) { /* ... */ }
-    function showToast(message, type) { /* ... */ }
+    function setAttendanceStatus(btn) {
+      const nama = btn.dataset.nama;
+      document.querySelectorAll(`.attendance-buttons button[data-nama="${nama}"]`).forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
 
-    // Ekspos fungsi global
-    window.logout = logout;
+    async function checkAbsensiExists() {
+      // Opsional: Implementasi cek apakah data sudah ada
+    }
+
+    async function saveAbsensi() {
+      const tanggal = document.getElementById('absensiTanggal').value;
+      const kelas = document.getElementById('absensiKelas').value;
+      
+      if (!tanggal || !kelas) { showToast('Pilih tanggal dan kelas', 'error'); return; }
+      
+      const santriItems = document.querySelectorAll('#absensiSantriItems > div');
+      const santriInputData = [];
+      
+      santriItems.forEach(item => {
+        const nama = item.querySelector('strong').textContent;
+        const statusBtn = item.querySelector('.attendance-btn.active');
+        const status = statusBtn ? statusBtn.dataset.status : 'H';
+        const ketId = `keterangan-${nama.replace(/\s+/g, '-')}`;
+        const keterangan = document.getElementById(ketId) ? document.getElementById(ketId).value.trim() : '';
+        santriInputData.push({ nama, status, keterangan });
+      });
+      
+      if (santriInputData.length === 0) { showToast('Tidak ada data santri', 'error'); return; }
+      
+      const res = await callGAS('addAbsensi', { data: { tanggal, kelas, santri: santriInputData } });
+      if (res.success) {
+        showToast(res.message, 'success');
+        document.getElementById('absensiSantriItems').innerHTML = '';
+        document.getElementById('absensiSantriList').style.display = 'none';
+        loadDashboard();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    // ============================================
+    // FITUR DATA ABSENSI (VIEW)
+    // ============================================
+    async function loadAbsensiBulanList() {
+      const kelas = document.getElementById('viewAbsensiKelas').value;
+      if (!kelas) return;
+      
+      document.getElementById('absensiViewLoading').classList.add('active');
+      const res = await callGAS('getAbsensiBulan', { kelas });
+      document.getElementById('absensiViewLoading').classList.remove('active');
+      
+      if (res.success && res.data) {
+        const select = document.getElementById('viewAbsensiBulan');
+        select.innerHTML = '<option value="">Pilih Bulan</option>' + res.data.map(b => `<option value="${b.nama}">${b.nama}</option>`).join('');
+      }
+    }
+
+    async function loadAbsensiView() {
+      const kelas = document.getElementById('viewAbsensiKelas').value;
+      const bulan = document.getElementById('viewAbsensiBulan').value;
+      if (!kelas || !bulan) return;
+      
+      document.getElementById('absensiViewLoading').classList.add('active');
+      const res = await callGAS('getAbsensiData', { filter: { kelas, bulan } });
+      document.getElementById('absensiViewLoading').classList.remove('active');
+      
+      if (res.success) renderAbsensiTable(res.data, bulan);
+    }
+
+    function renderAbsensiTable(data, bulan) {
+      const thead = document.getElementById('absensiTableHead');
+      const tbody = document.getElementById('absensiTableBody');
+      
+      if (!data || data.length === 0) {
+        thead.innerHTML = '';
+        tbody.innerHTML = '<tr><td colspan="33" style="text-align:center;">Data kosong</td></tr>';
+        return;
+      }
+      
+      // Header
+      let headerHtml = '<tr><th rowspan="2">Nama</th><th colspan="31" style="text-align:center;">Tanggal</th><th rowspan="2">Ket</th></tr><tr>';
+      for (let i = 1; i <= 31; i++) headerHtml += `<th class="status-cell">${i}</th>`;
+      headerHtml += '<th></th></tr>';
+      thead.innerHTML = headerHtml;
+      
+      // Body
+      let bodyHtml = '';
+      data.forEach(item => {
+        bodyHtml += '<tr><th class="nama-cell">' + item.namaSantri + '</th>';
+        for (let i = 1; i <= 31; i++) {
+          const status = item.tanggal[i] || '';
+          bodyHtml += `<td class="status-cell" onclick="openEditAbsensiModal('${item.namaSantri}', ${i}, '${status}')" style="cursor:pointer;">`;
+          if (status) bodyHtml += `<span class="status-badge ${status}">${status}</span>`;
+          else bodyHtml += `<span class="status-badge empty">-</span>`;
+          bodyHtml += '</td>';
+        }
+        bodyHtml += `<td class="keterangan-cell">${item.keterangan || '-'}</td></tr>`;
+      });
+      tbody.innerHTML = bodyHtml;
+    }
+
+    function openEditAbsensiModal(namaSantri, tanggal, status) {
+      document.getElementById('editAbsensiNamaSantri').value = namaSantri;
+      document.getElementById('editAbsensiNamaDisplay').value = namaSantri;
+      document.getElementById('editAbsensiKelas').value = document.getElementById('viewAbsensiKelas').value;
+      document.getElementById('editAbsensiBulan').value = document.getElementById('viewAbsensiBulan').value;
+      document.getElementById('editAbsensiTanggal').value = tanggal;
+      
+      const bulan = document.getElementById('editAbsensiBulan').value;
+      document.getElementById('editAbsensiTanggalDisplay').value = `${tanggal} ${bulan}`;
+      
+      setEditAbsensiStatus(status || 'H');
+      document.getElementById('editAbsensiModal').classList.add('active');
+    }
+
+    function closeEditAbsensiModal() {
+      document.getElementById('editAbsensiModal').classList.remove('active');
+    }
+
+    function setEditAbsensiStatus(status) {
+      editAbsensiStatus = status;
+      ['H','I','S','A'].forEach(s => document.getElementById('editAbsensiBtn'+s).classList.remove('active'));
+      document.getElementById('editAbsensiBtn'+status).classList.add('active');
+    }
+
+    async function saveEditAbsensi() {
+      const kelas = document.getElementById('editAbsensiKelas').value;
+      const bulan = document.getElementById('editAbsensiBulan').value;
+      const tanggal = document.getElementById('editAbsensiTanggal').value;
+      const namaSantri = document.getElementById('editAbsensiNamaSantri').value;
+      
+      const res = await callGAS('updateAbsensi', { id: '', data: { kelas, bulan, tanggal, namaSantri, status: editAbsensiStatus } });
+      if (res.success) {
+        closeEditAbsensiModal();
+        showToast('Berhasil diupdate', 'success');
+        loadAbsensiView();
+      }
+    }
+
+    async function deleteAbsensiCell() {
+      if (!confirm('Hapus absensi ini?')) return;
+      const kelas = document.getElementById('editAbsensiKelas').value;
+      const bulan = document.getElementById('editAbsensiBulan').value;
+      const tanggal = document.getElementById('editAbsensiTanggal').value;
+      const namaSantri = document.getElementById('editAbsensiNamaSantri').value;
+
+      const res = await callGAS('deleteAbsensi', { data: { kelas, bulan, tanggal, namaSantri } });
+      if (res.success) {
+        closeEditAbsensiModal();
+        showToast('Berhasil dihapus', 'success');
+        loadAbsensiView();
+      }
+    }
+
+    function printAbsensi() { window.print(); }
+
+    // ============================================
+    // FITUR PROGRES
+    // ============================================
+    function handleProgresTipeChange() {
+      const tipe = document.getElementById('progresTipe').value;
+      document.getElementById('suratWajibFields').style.display = (tipe === 'Surat Wajib') ? 'block' : 'none';
+      document.getElementById('kitabFields').style.display = (tipe === 'Kitab') ? 'block' : 'none';
+      document.getElementById('lainnyaFields').style.display = (tipe === 'Lainnya') ? 'block' : 'none';
+    }
+
+    async function handleProgresSubmit(e) {
+      e.preventDefault();
+      const data = {
+        namaSantri: document.getElementById('progresNama').value,
+        tipeHafalan: document.getElementById('progresTipe').value,
+        keterangan: document.getElementById('progresKeterangan').value,
+        editor: currentUser.name
+      };
+      
+      if (data.tipeHafalan === 'Surat Wajib') {
+        data.surah = document.getElementById('progresSurah').value;
+        data.dariAyat = document.getElementById('progresDariAyat').value;
+        data.sampaiAyat = document.getElementById('progresSampaiAyat').value;
+      } else if (data.tipeHafalan === 'Kitab') {
+        data.surah = document.getElementById('progresNamaKitab').value;
+        data.bait = document.getElementById('progresBait').value;
+      } else {
+        data.surah = document.getElementById('progresNamaLainnya').value;
+      }
+
+      const res = await callGAS('addProgres', { data });
+      if (res.success) {
+        showToast('Berhasil disimpan', 'success');
+        document.getElementById('progresForm').reset();
+        handleProgresTipeChange();
+        loadProgresData();
+      }
+    }
+
+    async function loadProgresData() {
+      document.getElementById('progresLoading').classList.add('active');
+      const res = await callGAS('getProgresData', { filter: {} });
+      document.getElementById('progresLoading').classList.remove('active');
+      
+      if (res.success) {
+        progresData = res.data;
+        renderProgresTable(res.data);
+      }
+    }
+
+    function renderProgresTable(data) {
+      const tbody = document.getElementById('progresTableBody');
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Data kosong</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = data.map(item => {
+        const date = new Date(item.tanggal).toLocaleDateString('id-ID');
+        let detail = '';
+        if (item.tipeHafalan === 'Surat Wajib') detail = `${item.surah} (${item.dariAyat}-${item.sampaiAyat})`;
+        else if (item.tipeHafalan === 'Kitab') detail = `${item.surah} (${item.bait} bait)`;
+        else detail = item.surah || '-';
+        
+        return `<tr>
+          <td>${date}</td>
+          <td><strong>${item.namaSantri}</strong></td>
+          <td><span class="badge badge-info">${item.tipeHafalan}</span></td>
+          <td>${detail}</td>
+          <td>${item.editor}</td>
+          <td>
+            <button class="action-btn edit" onclick="openEditProgresModal('${item.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deleteProgres('${item.id}')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterProgres() {
+      const keyword = document.getElementById('searchProgres').value.toLowerCase();
+      const filtered = progresData.filter(i => i.namaSantri.toLowerCase().includes(keyword) || i.tipeHafalan.toLowerCase().includes(keyword));
+      renderProgresTable(filtered);
+    }
+
+    function openEditProgresModal(id) {
+      const item = progresData.find(p => p.id === id);
+      if (!item) return;
+      
+      document.getElementById('editProgresId').value = item.id;
+      document.getElementById('editProgresNama').value = item.namaSantri;
+      document.getElementById('editProgresTipe').value = item.tipeHafalan;
+      document.getElementById('editProgresKeterangan').value = item.keterangan || '';
+      
+      handleEditProgresTipeChange(); // Show correct fields
+      
+      if (item.tipeHafalan === 'Surat Wajib') {
+        document.getElementById('editProgresSurah').value = item.surah || '';
+        document.getElementById('editProgresDariAyat').value = item.dariAyat || '';
+        document.getElementById('editProgresSampaiAyat').value = item.sampaiAyat || '';
+      } else if (item.tipeHafalan === 'Kitab') {
+        document.getElementById('editProgresNamaKitab').value = item.surah || '';
+        document.getElementById('editProgresBait').value = item.bait || '';
+      } else {
+        document.getElementById('editProgresNamaLainnya').value = item.surah || '';
+      }
+      
+      document.getElementById('editProgresModal').classList.add('active');
+    }
+
+    function closeEditProgresModal() { document.getElementById('editProgresModal').classList.remove('active'); }
+    
+    function handleEditProgresTipeChange() {
+      const tipe = document.getElementById('editProgresTipe').value;
+      document.getElementById('editSuratWajibFields').style.display = (tipe === 'Surat Wajib') ? 'block' : 'none';
+      document.getElementById('editKitabFields').style.display = (tipe === 'Kitab') ? 'block' : 'none';
+      document.getElementById('editLainnyaFields').style.display = (tipe === 'Lainnya') ? 'block' : 'none';
+    }
+
+    async function saveEditProgres() {
+      const id = document.getElementById('editProgresId').value;
+      const data = {
+        namaSantri: document.getElementById('editProgresNama').value,
+        tipeHafalan: document.getElementById('editProgresTipe').value,
+        keterangan: document.getElementById('editProgresKeterangan').value,
+        editor: currentUser.name
+      };
+      // Logic similar to submit...
+      if (data.tipeHafalan === 'Surat Wajib') {
+        data.surah = document.getElementById('editProgresSurah').value;
+        data.dariAyat = document.getElementById('editProgresDariAyat').value;
+        data.sampaiAyat = document.getElementById('editProgresSampaiAyat').value;
+      } else if (data.tipeHafalan === 'Kitab') {
+        data.surah = document.getElementById('editProgresNamaKitab').value;
+        data.bait = document.getElementById('editProgresBait').value;
+      } else {
+        data.surah = document.getElementById('editProgresNamaLainnya').value;
+      }
+      
+      const res = await callGAS('updateProgres', { id, data });
+      if (res.success) {
+        closeEditProgresModal();
+        showToast('Berhasil diupdate', 'success');
+        loadProgresData();
+      }
+    }
+
+    async function deleteProgres(id) {
+      if (!confirm('Hapus data ini?')) return;
+      const res = await callGAS('deleteProgres', { id });
+      if (res.success) {
+        showToast('Berhasil dihapus', 'success');
+        loadProgresData();
+      }
+    }
+    
+    function printProgres() { window.print(); }
+
+    // ============================================
+    // FITUR PELANGGARAN
+    // ============================================
+    async function handlePelanggaranSubmit(e) {
+      e.preventDefault();
+      const data = {
+        namaSantri: document.getElementById('pelanggaranNama').value,
+        pelanggaran: document.getElementById('pelanggaranJenis').value,
+        keterangan: document.getElementById('pelanggaranKeterangan').value,
+        editor: currentUser.name
+      };
+      const res = await callGAS('addPelanggaran', { data });
+      if (res.success) {
+        showToast('Berhasil disimpan', 'success');
+        document.getElementById('pelanggaranForm').reset();
+        loadPelanggaranData();
+      }
+    }
+
+    async function loadPelanggaranData() {
+      document.getElementById('pelanggaranLoading').classList.add('active');
+      const res = await callGAS('getPelanggaranData', { filter: {} });
+      document.getElementById('pelanggaranLoading').classList.remove('active');
+      
+      if (res.success) {
+        pelanggaranData = res.data;
+        renderPelanggaranTable(res.data);
+      }
+    }
+
+    function renderPelanggaranTable(data) {
+      const tbody = document.getElementById('pelanggaranTableBody');
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Data kosong</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(item => {
+        const date = new Date(item.tanggal).toLocaleDateString('id-ID');
+        return `<tr>
+          <td>${date}</td>
+          <td><strong>${item.namaSantri}</strong></td>
+          <td><span class="badge badge-danger">${item.pelanggaran}</span></td>
+          <td>${item.keterangan || '-'}</td>
+          <td>${item.editor}</td>
+          <td>
+            <button class="action-btn edit" onclick="openEditPelanggaranModal('${item.id}')"><i class="fas fa-edit"></i></button>
+            <button class="action-btn delete" onclick="deletePelanggaran('${item.id}')"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function filterPelanggaran() {
+      const keyword = document.getElementById('searchPelanggaran').value.toLowerCase();
+      const filtered = pelanggaranData.filter(i => i.namaSantri.toLowerCase().includes(keyword) || i.pelanggaran.toLowerCase().includes(keyword));
+      renderPelanggaranTable(filtered);
+    }
+
+    function openEditPelanggaranModal(id) {
+      const item = pelanggaranData.find(p => p.id === id);
+      if (!item) return;
+      document.getElementById('editPelanggaranId').value = id;
+      document.getElementById('editPelanggaranNama').value = item.namaSantri;
+      document.getElementById('editPelanggaranJenis').value = item.pelanggaran;
+      document.getElementById('editPelanggaranKeterangan').value = item.keterangan || '';
+      document.getElementById('editPelanggaranModal').classList.add('active');
+    }
+
+    function closeEditPelanggaranModal() { document.getElementById('editPelanggaranModal').classList.remove('active'); }
+
+    async function saveEditPelanggaran() {
+      const id = document.getElementById('editPelanggaranId').value;
+      const data = {
+        namaSantri: document.getElementById('editPelanggaranNama').value,
+        pelanggaran: document.getElementById('editPelanggaranJenis').value,
+        keterangan: document.getElementById('editPelanggaranKeterangan').value,
+        editor: currentUser.name
+      };
+      const res = await callGAS('updatePelanggaran', { id, data });
+      if (res.success) {
+        closeEditPelanggaranModal();
+        showToast('Berhasil diupdate', 'success');
+        loadPelanggaranData();
+      }
+    }
+
+    async function deletePelanggaran(id) {
+      if (!confirm('Hapus data ini?')) return;
+      const res = await callGAS('deletePelanggaran', { id });
+      if (res.success) {
+        showToast('Berhasil dihapus', 'success');
+        loadPelanggaranData();
+      }
+    }
+    
+    function printPelanggaran() { window.print(); }
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    function updateTodayDate() {
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const el = document.getElementById('todayDate');
+      if(el) el.textContent = today.toLocaleDateString('id-ID', options);
+    }
+
+    function setupAutocomplete(inputId, suggestionsId) {
+      const input = document.getElementById(inputId);
+      const suggestions = document.getElementById(suggestionsId);
+      if (!input || !suggestions) return;
+      
+      input.addEventListener('input', function() {
+        const val = this.value.toLowerCase();
+        if (!val) { suggestions.classList.remove('active'); return; }
+        const matches = santriData.filter(s => s.nama.toLowerCase().includes(val));
+        if (!matches.length) { suggestions.classList.remove('active'); return; }
+        
+        suggestions.innerHTML = matches.map(s => `<div class="autocomplete-item" onclick="selectAutocomplete('${inputId}', '${s.nama}')">${s.nama}</div>`).join('');
+        suggestions.classList.add('active');
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.autocomplete-wrapper')) suggestions.classList.remove('active');
+      });
+    }
+
+    function selectAutocomplete(inputId, value) {
+      document.getElementById(inputId).value = value;
+      document.getElementById(inputId + 'Suggestions').classList.remove('active');
+    }
+
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      t.className = `toast toast-${type} active`;
+      t.innerHTML = `<i class="fas fa-info-circle"></i> <span>${msg}</span>`;
+      setTimeout(() => t.classList.remove('active'), 3000);
+    }
+
+    function showAlert(id, msg, type) {
+      const el = document.getElementById(id);
+      el.className = `alert alert-${type} active`;
+      el.textContent = msg;
+      setTimeout(() => el.classList.remove('active'), 5000);
+    }
+
+    // Expose functions to window for onclick events
     window.showPage = showPage;
+    window.logout = logout;
     window.setAttendanceStatus = setAttendanceStatus;
     window.loadSantriByKelas = loadSantriByKelas;
     window.checkAbsensiExists = checkAbsensiExists;
@@ -1361,6 +1889,7 @@
     window.saveEditPelanggaran = saveEditPelanggaran;
     window.deletePelanggaran = deletePelanggaran;
     window.printPelanggaran = printPelanggaran;
+    window.selectAutocomplete = selectAutocomplete;
   </script>
 </body>
 </html>
